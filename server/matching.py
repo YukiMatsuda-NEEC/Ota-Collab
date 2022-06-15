@@ -25,11 +25,9 @@ class User:
 
 
 def matching(person = User()):                  # 引数personとはマッチングしたい本人のこと
-    targetUser[person.numberOfPeople] = User()  # 比較対象のユーザーまとめの配列
-
+    targetUser = []
     for i in range(person.numberOfPeople):
-        targetUserInstance = User()
-        targetUser.append()
+        targetUser.append(User())
 
     offerUser = User()
     for i in range(person.numberOfPeople):
