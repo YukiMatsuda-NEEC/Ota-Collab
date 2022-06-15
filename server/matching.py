@@ -31,8 +31,6 @@ def matching(User person):                  # 引数personとはマッチング�
         if(currentMatchingPram >= maxMatchingPram){
             maxMatchingPram = currentMatchingPram
             offerUser = targetUser[i]
-        }else{
-            # いい相手が見つかりませんでした的な処理をする……？本当に……？
         }
     return offerUser
 
