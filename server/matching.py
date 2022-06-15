@@ -1,37 +1,45 @@
 class User:
-    var userID                  # ユーザーID
-    var managementIssuesArray   # 経営課題のフラグ列
-    var numberOfPeople          # ユーザー数
+    userID = 0                  # ユーザーID
+    managementIssuesArray = 0b0 # 経営課題のフラグ列
+    numberOfPeople = 0          # ユーザー数
 
     def __init__(self):
-        self.UserID = getUserID()
-        self.managementIssuesArray = getManagementIssues()
-        self.numberOfPeople = getNumberOfPeople()
+        self.UserID = self.getUserID()
+        self.managementIssuesArray = self.getManagementIssues()
+        self.numberOfPeople = self.getNumberOfPeople()
 
     def getUserID():
         # firebaseに接続してユーザーIDを取ってくる
+        userID = 0                      # 暫定
         return userID
 
     def getManagementIssues():
         # firebaseに接続して経営課題のフラグを取ってくる
+        managementIssuesArray = 0b0     # 暫定
         return managementIssuesArray
 
     def getNumberOfPeople():
         # firebaseに接続してユーザー数を取ってくる
+        numberOfPeople = 0              # 暫定
         return numberOfPeople
 
 
-def matching(User person):                  # 引数personとはマッチングしたい本人のこと
-    User targetUser[person.numberOfPeople]  # 比較対象のユーザーまとめの配列
-    User offerUser
+def matching(person = User()):                  # 引数personとはマッチングしたい本人のこと
+    targetUser[person.numberOfPeople] = User()  # 比較対象のユーザーまとめの配列
+
     for i in range(person.numberOfPeople):
-        var maxMatchingPram = 0
-        var currentMatchingParam = 0
+        targetUserInstance = User()
+        targetUser.append()
+
+    offerUser = User()
+    for i in range(person.numberOfPeople):
+        maxMatchingPram = 0
+        currentMatchingParam = 0
         currentMatchingPram = person.managementIssuesArray & targetUser[i].managementIssuesArray
-        if(currentMatchingPram >= maxMatchingPram){
+        if(currentMatchingPram >= maxMatchingPram):
             maxMatchingPram = currentMatchingPram
             offerUser = targetUser[i]
-        }
+
     return offerUser
 
 def main():
