@@ -24,7 +24,7 @@ class User:
 def matching(User person):                  # 引数personとはマッチングしたい本人のこと
     User targetUser[person.numberOfPeople]  # 比較対象のユーザーまとめの配列
     User offerUser
-    for i in length(targetUser.numberOfPeople):
+    for i in range(person.numberOfPeople):
         var maxMatchingPram = 0
         var currentMatchingParam = 0
         currentMatchingPram = person.managementIssuesArray & targetUser[i].managementIssuesArray
