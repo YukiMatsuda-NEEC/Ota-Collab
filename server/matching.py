@@ -25,7 +25,7 @@ class User:
 
 
 def matching(person = User()):                  # 引数personとはマッチングしたい本人のこと
-    targetUser = []
+    targetUser = []                             # マッチングしたい相手
     for i in range(person.numberOfPeople):
         targetUser.append(User())
 
