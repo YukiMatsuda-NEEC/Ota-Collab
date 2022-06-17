@@ -9,7 +9,7 @@ class User:
     def getManagementIssues(self, userID):
         # firebaseに接続して経営課題のフラグを取ってくる代わり
         if(self.userID == 0):
-            managementIssuesArray = 0b000111     # 暫定
+            managementIssuesArray = 0b000000     # 暫定
         if(self.userID == 1):
             managementIssuesArray = 0b001011     # 暫定
         if(self.userID == 2):
@@ -31,18 +31,20 @@ class User:
 
 
 def matching(person):                  # 引数personとはマッチングしたい本人のこと
-    targetUser = []                             # マッチングしたい相手
-    for i in range(person.numberOfPeople):
+    targetUser = []
+    for i in range(1, person.numberOfPeople, 1):
         if(person.userID != i):
             targetUser.append(User(i))
-            print(targetUser[i-1].managementIssuesArray)
-
+        else:
+            targetUser.append(User(0))
+    
+    # ここから下は未検証
     offerUser = User()
     maxMatchingPram = 0
     currentMatchingParam = 0
     for i in range(person.numberOfPeople-1):
         currentMatchingPram = person.managementIssuesArray & targetUser[i].managementIssuesArray
-        print(currentMatchingParam)
+ #       print(currentMatchingParam)
         if(currentMatchingPram > maxMatchingPram):
             maxMatchingPram = currentMatchingPram
             offerUser = targetUser[i]
@@ -50,9 +52,9 @@ def matching(person):                  # 引数personとはマッチングした
     return offerUser
 
 def main():
-    person = User(4)
+    person = User(3)
     offerUser = matching(person)
-    print(offerUser.managementIssuesArray)
+#    print(offerUser.managementIssuesArray)
 
 if __name__ == '__main__':
     main()
