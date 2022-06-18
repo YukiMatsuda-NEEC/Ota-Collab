@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 
 class User:
+    # コンストラクタ（デフォルト：userID=0）
     def __init__(self, userID=0):
         self.userID = userID
         self.managementIssuesArray = self.getManagementIssues(userID)
         self.numberOfPeople = self.getNumberOfPeople()
 
+    # 経営課題を取得する関数
     def getManagementIssues(self, userID):
         # firebaseに接続して経営課題のフラグを取ってくる代わり
         if(self.userID == 0):
-            managementIssuesArray = 0b000000000     # 暫定
+            managementIssuesArray = 0b000000000     # ユーザー0: 空っぽの値
         if(self.userID == 1):
             managementIssuesArray = 0b101011101     # 暫定
         if(self.userID == 2):
@@ -30,6 +32,7 @@ class User:
             managementIssuesArray = 0b101110001     # 暫定
         return managementIssuesArray
 
+    # ユーザー数を取得する関数（クラス外に出したほうがいいかも）
     def getNumberOfPeople(self):
         # firebaseに接続してユーザー数を取ってくる代わり
         numberOfPeople = 10                     # 暫定
@@ -37,20 +40,23 @@ class User:
 
 
 def matching(person):                  # 引数personとはマッチングしたい本人のこと
-    targetUser = []
+    targetUser = []                    # マッチング相手の配列
+    # マッチング相手の経営課題情報をユーザーID上から順番に取ってくる
     for i in range(1, person.numberOfPeople, 1):
         if(person.userID != i):
             targetUser.append(User(i))
         else:
-            targetUser.append(User(0))
+            targetUser.append(User(0))  # 自分の情報はskipする
     
-    # ここから下は未検証
-    offerUser = User()
-    maxMatchingParam = 0
-    currentMatchingParam = 0
+    offerUser = User()                  # コラボ相手として推薦するユーザーのオブジェクト
+    maxMatchingParam = 0                # フラグ一致度最多のユーザーとの一致度
+    currentMatchingParam = 0            # 現在比較中の相手とのフラグ一致度
+
+    # ユーザーIDが若い順に経営課題一致度を比較している
     for i in range(0, len(targetUser), 1):
         currentMatchingParam = bin(person.managementIssuesArray & targetUser[i].managementIssuesArray).count("1")
         print("current: "+str(currentMatchingParam)+", "+str(bin(person.managementIssuesArray & targetUser[i].managementIssuesArray)))
+        # もしかつてない一致度を持つユーザーが現れたらそれをコラボ相手候補とする
         if(currentMatchingParam >= maxMatchingParam):
             maxMatchingParam = currentMatchingParam
             offerUser = targetUser[i]
