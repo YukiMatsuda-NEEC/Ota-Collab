@@ -39,7 +39,6 @@ class User:
         return numberOfPeople
 
 
-# マッチングアルゴリズム
 def matching(person):                  # 引数personとはマッチングしたい本人のこと
     targetUser = []                    # マッチング相手の配列
     # マッチング相手の経営課題情報をユーザーID上から順番に取ってくる
