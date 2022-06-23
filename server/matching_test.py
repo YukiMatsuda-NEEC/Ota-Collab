@@ -15,7 +15,7 @@ class User:
         if(self.userID == 1):
             managementIssuesArray = 0b101011101     # 暫定
         if(self.userID == 2):
-            managementIssuesArray = 0b101010111     # 暫定
+            managementIssuesArray = 0b101010101     # 暫定
         if(self.userID == 3):
             managementIssuesArray = 0b110010101     # 暫定
         if(self.userID == 4):
@@ -48,25 +48,32 @@ def matching(person):                  # 引数personとはマッチングした
         else:
             targetUser.append(User(0))  # 自分の情報はskipする
     
-    offerUser = User()                  # コラボ相手として推薦するユーザーのオブジェクト
-    maxMatchingParam = 0                # フラグ一致度最多のユーザーとの一致度
+    offerUser = []                      # コラボ相手として推薦するユーザーのオブジェクト
+    maxMatchingParam = 0                # 最多フラグ一致度
     currentMatchingParam = 0            # 現在比較中の相手とのフラグ一致度
 
-    # ユーザーIDが若い順に経営課題一致度を比較している
-    for i in range(0, len(targetUser), 1):
+    # ユーザーIDが若い順に経営課題一致度を比較している（「最多フラグ一致度」を調べるため）
+    for i in range(1, len(targetUser), 1):
         currentMatchingParam = bin(person.managementIssuesArray & targetUser[i].managementIssuesArray).count("1")
         print("current: "+str(currentMatchingParam)+", "+str(bin(person.managementIssuesArray & targetUser[i].managementIssuesArray)))
-        # もしかつてない一致度を持つユーザーが現れたらそれをコラボ相手候補とする
+        # もしかつてない一致度を持つユーザーが現れたらその一致度を「最多フラグ一致度」とする
         if(currentMatchingParam >= maxMatchingParam):
             maxMatchingParam = currentMatchingParam
-            offerUser = targetUser[i]
+
+    # 「最多フラグ一致度」を持つユーザーを配列に追加する
+    for i in range(1, len(targetUser), 1):
+        # もし比較対象のユーザーが「最多フラグ一致度」を持っていたら、offerUser[]にappendする
+        if(bin(person.managementIssuesArray & targetUser[i].managementIssuesArray).count("1") == maxMatchingParam):
+            offerUser.append(User(i))
 
     return offerUser
 
 def main():
-    person = User(2)
+    person = User(6)
+    offerUser = []
     offerUser = matching(person)
-    print(bin(offerUser.managementIssuesArray))
+    for i in range(len(offerUser)):
+        print(bin(offerUser[i].managementIssuesArray))
 
 if __name__ == '__main__':
     main()
