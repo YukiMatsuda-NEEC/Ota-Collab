@@ -1,5 +1,5 @@
 <template>
-  <section class="profiles" v-if="isInputMode">
+  <section class="profiles" v-if="isEditing">
     <div class="profile">
       <Title> コラボ願望 </Title>
       サンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプル
@@ -108,6 +108,13 @@ import Title from "~/components/Title.vue";
 import otaInput from "~/components/otaInput.vue";
 export default {
   name: "profiles",
+  props:{
+    isEditing:{
+      type: Boolean,
+      required: false,
+      default: false,
+    }
+  },
   components: {
     Title,
     otaInput,

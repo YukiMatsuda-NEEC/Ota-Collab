@@ -1,7 +1,8 @@
 <template>
   <div>
     <header>
-      <p>OTTA collab.</p>
+      <p>OOTA collab.</p>
+      <p @click="Edit">Edit</p>
     </header>
     <section class="header-imgs">
       <img
@@ -16,7 +17,7 @@
       />
       <p class="shop-name">{{ shopName }}</p>
     </section>
-    <profiles />
+    <profiles :isEditing="isEditing" />
   </div>
 </template>
 <style lang="scss" scoped>
@@ -66,7 +67,13 @@ export default {
       shopName: "のりや",
       userName: "田中",
       isInputMode: false,
+      isEditing: false,
     };
+  },
+  methods: {
+    Edit() {
+      this.isEditing = !this.isEditing;
+    },
   },
 };
 </script>
