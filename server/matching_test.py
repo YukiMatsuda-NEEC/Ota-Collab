@@ -1,35 +1,26 @@
 # -*- coding: utf-8 -*-
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 
+cred = credentials.Certificate('ota-collab-firebase-adminsdk-6j6sr-dd6f19053b.json')
+firebase_admin.initialize_app(cred)
+
+db = firestore.client()
 class User:
     # コンストラクタ（デフォルト：userID=0）
     def __init__(self, userID=0):
         self.userID = userID
         self.managementIssuesArray = self.getManagementIssues(userID)
         self.numberOfPeople = self.getNumberOfPeople()
-
+    
     # 経営課題を取得する関数
     def getManagementIssues(self, userID):
         # firebaseに接続して経営課題のフラグを取ってくる代わり
-        if(self.userID == 0):
-            managementIssuesArray = 0b000000000     # ユーザー0: 空っぽの値
-        if(self.userID == 1):
-            managementIssuesArray = 0b101011101     # 暫定
-        if(self.userID == 2):
-            managementIssuesArray = 0b101010101     # 暫定
-        if(self.userID == 3):
-            managementIssuesArray = 0b110010101     # 暫定
-        if(self.userID == 4):
-            managementIssuesArray = 0b100110011     # 暫定
-        if(self.userID == 5):
-            managementIssuesArray = 0b101011011     # 暫定
-        if(self.userID == 6):
-            managementIssuesArray = 0b101110111     # 暫定
-        if(self.userID == 7):
-            managementIssuesArray = 0b101001111     # 暫定
-        if(self.userID == 8):
-            managementIssuesArray = 0b101101011     # 暫定
-        if(self.userID == 9):
-            managementIssuesArray = 0b101110001     # 暫定
+        doc_ref = db.collection('ManagementIssues')
+        docs = doc_ref.stream()
+        for doc in docs:
+            
         return managementIssuesArray
 
     # ユーザー数を取得する関数（クラス外に出したほうがいいかも）
