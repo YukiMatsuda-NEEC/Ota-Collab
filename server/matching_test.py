@@ -14,7 +14,7 @@ class User:
         self.userID = userID
         self.managementIssuesArray = self.getManagementIssues(userID)
         self.numberOfPeople = self.getNumberOfPeople()
-
+    
     # 経営課題を取得する関数
     def getManagementIssues(self, userID):
         # firebaseに接続して経営課題のフラグを取ってくる代わり
