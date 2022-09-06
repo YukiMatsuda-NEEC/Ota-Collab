@@ -92,8 +92,46 @@
     <div class="profile">
       <Title> 経営課題 </Title>
       <div class="profile-issues">
-        <input id="1" class="issue-checkbox" type="checkbox" v-model="issues" />
+        <input
+          id="1"
+          class="issue-checkbox"
+          type="checkbox"
+          value="1"
+          v-model="issues"
+        />
         <label class="issue" for="1">サンプル</label>
+        <input
+          id="2"
+          class="issue-checkbox"
+          type="checkbox"
+          value="2"
+          v-model="issues"
+        />
+        <label class="issue" for="2">サンプル</label>
+        <input
+          id="3"
+          class="issue-checkbox"
+          type="checkbox"
+          value="3"
+          v-model="issues"
+        />
+        <label class="issue" for="3">サンプル</label>
+        <input
+          id="4"
+          class="issue-checkbox"
+          type="checkbox"
+          value="4"
+          v-model="issues"
+        />
+        <label class="issue" for="4">サンプル</label>
+        <input
+          id="5"
+          class="issue-checkbox"
+          type="checkbox"
+          value="5"
+          v-model="issues"
+        />
+        <label class="issue" for="5">サンプル</label>
         <!-- TODO:v-forでの問題を自動挿入 -->
       </div>
     </div>
@@ -108,12 +146,12 @@ import Title from "~/components/Title.vue";
 import otaInput from "~/components/otaInput.vue";
 export default {
   name: "profiles",
-  props:{
-    isEditing:{
+  props: {
+    isEditing: {
       type: Boolean,
       required: false,
       default: false,
-    }
+    },
   },
   components: {
     Title,
@@ -124,7 +162,7 @@ export default {
       shopName: "のりや",
       userName: "田中",
       isInputMode: false,
-      issues: {},
+      issues: [],
     };
   },
 };
@@ -164,7 +202,7 @@ export default {
         background-color: #d9d9d9;
         height: 22px;
         width: 100%;
-        margin: auto;
+        margin: 5px auto;
         font-weight: bold;
         border-radius: 10px;
       }

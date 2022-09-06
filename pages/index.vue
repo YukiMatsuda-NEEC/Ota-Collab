@@ -64,7 +64,7 @@ export default {
   },
   data() {
     return {
-      shopName: "のりや",
+      shopName: "パン屋",
       userName: "田中",
       isInputMode: false,
       isEditing: false,
