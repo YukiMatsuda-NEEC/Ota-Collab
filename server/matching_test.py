@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+
+cred = credentials.Certificate('./server/ota-collab-firebase-adminsdk-h8lt9-d5aa562d5e.json')
+firebase_admin.initialize_app(cred)
+
+db = firestore.client()
 
 class User:
     # コンストラクタ（デフォルト：userID=0）
@@ -6,7 +14,7 @@ class User:
         self.userID = userID
         self.managementIssuesArray = self.getManagementIssues(userID)
         self.numberOfPeople = self.getNumberOfPeople()
-
+    
     # 経営課題を取得する関数
     def getManagementIssues(self, userID):
         # firebaseに接続して経営課題のフラグを取ってくる代わり
@@ -30,12 +38,23 @@ class User:
             managementIssuesArray = 0b101101011     # 暫定
         if(self.userID == 9):
             managementIssuesArray = 0b101110001     # 暫定
+        if(self.userID == 10):
+            managementIssuesArray = 0b101010001     # 暫定
+        if(self.userID == 11):
+            managementIssuesArray = 0b001000001     # 暫定
         return managementIssuesArray
 
     # ユーザー数を取得する関数（クラス外に出したほうがいいかも）
     def getNumberOfPeople(self):
         # firebaseに接続してユーザー数を取ってくる代わり
-        numberOfPeople = 10                     # 暫定
+        numberOfPeople = 0
+        doc_ref = db.collection('ManagementIssues')
+        docs = doc_ref.stream()
+        for doc in docs:
+            numberOfPeople += 1
+
+        # numberOfPeople = 10                     # 暫定
+        print("numberOfPeople: "+str(numberOfPeople))
         return numberOfPeople
 
 
