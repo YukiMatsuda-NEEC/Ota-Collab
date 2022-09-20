@@ -1,7 +1,7 @@
 <template>
   <div>
     <header>
-      <p>OTTA collab.</p>
+      <p>OOTA collab.</p>
     </header>
     <section class="header-imgs">
       <img
