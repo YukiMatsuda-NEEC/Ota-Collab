@@ -13,7 +13,6 @@ class User:
     def __init__(self, userID=0):
         self.userID = userID
         self.managementIssuesArray = self.getManagementIssues(userID)
-        self.numberOfPeople = self.getNumberOfPeople()
     
     # 経営課題を取得する関数
     def getManagementIssues(self, userID):
@@ -44,24 +43,21 @@ class User:
             managementIssuesArray = 0b001000001     # 暫定
         return managementIssuesArray
 
-    # ユーザー数を取得する関数（クラス外に出したほうがいいかも）
-    def getNumberOfPeople(self):
-        # firebaseに接続してユーザー数を取ってくる代わり
-        numberOfPeople = 0
-        doc_ref = db.collection('ManagementIssues')
-        docs = doc_ref.stream()
-        for doc in docs:
-            numberOfPeople += 1
 
-        # numberOfPeople = 10                     # 暫定
-        print("numberOfPeople: "+str(numberOfPeople))
-        return numberOfPeople
+def getNumberOfPeople():
+    numberOfPeople = 0
+    doc_ref = db.collection('ManagementIssues')
+    docs = doc_ref.stream()
+    for doc in docs:
+        numberOfPeople += 1
+    print("numberOfPeople: "+str(numberOfPeople))
+    return numberOfPeople
 
-
-def matching(person):                  # 引数personとはマッチングしたい本人のこと
+def matching(person):                  # 引数personとはマッチングしたい本人のこと]
+    numberOfPeople = getNumberOfPeople()
     targetUser = []                    # マッチング相手の配列
     # マッチング相手の経営課題情報をユーザーID上から順番に取ってくる
-    for i in range(1, person.numberOfPeople, 1):
+    for i in range(1, numberOfPeople, 1):
         if(person.userID != i):
             targetUser.append(User(i))
         else:
