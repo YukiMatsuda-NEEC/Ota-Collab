@@ -26,6 +26,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+input {
+  width: 100%;
+  box-sizing: border-box;
+}
 textarea {
   resize: vertical;
   width: 100%;
