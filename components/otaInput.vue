@@ -28,10 +28,19 @@ export default {
 <style lang="scss" scoped>
 input {
   width: 100%;
+  height: 29px;
   box-sizing: border-box;
+  border: 0;
+  font-weight: bold;
 }
 textarea {
   resize: vertical;
   width: 100%;
+  height: 60px;
+}
+input,
+textarea {
+  background-color: #c4c4c4;
+  border-radius: 4px;
 }
 </style>

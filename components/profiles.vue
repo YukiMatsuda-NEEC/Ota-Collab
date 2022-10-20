@@ -178,19 +178,27 @@ export default {
     margin: 20px 0;
     box-shadow: 0px 0px 16px -3px rgba(0, 0, 0, 0.6);
     font-size: 15px;
+
     table {
       width: 100%;
     }
     &-value {
       padding-left: 20px;
-      select,
-      input {
+
+      select {
+        border-radius: 4px;
+        border: none;
+        background-color: #c4c4c4;
+        height: 29px;
         width: 100%;
+        font-weight: bold;
       }
     }
     &-issues {
       display: grid;
       grid-template-columns: 50% 50%;
+      background-color: #f3f3f3;
+      padding: 12px;
 
       input {
         display: none;
@@ -199,9 +207,10 @@ export default {
         background-color: #f1da8a;
       }
       .issue {
+        // padding: 0 12px;
         background-color: #d9d9d9;
         height: 22px;
-        width: 100%;
+        width: 95%;
         margin: 5px auto;
         font-weight: bold;
         border-radius: 10px;
