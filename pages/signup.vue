@@ -1,0 +1,44 @@
+<template>
+  <div>
+    <section>
+      <!--v-modelでdata.user.email紐付け--->
+      <input type=”email” name=”email”  required="required" placeholder="E-mail" v-model="user.email">
+      <!--v-modelでdata.user.password紐付け--->
+      <input type=”password” name=”passWord” required="required" placeholder="PassWord" v-model="user.password">
+      <!--@click="register"でmethods,registerの処理--->
+      <button @click="register">登録</button>
+    </section>
+  </div>
+</template>
+
+<script>
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+export default {
+data () {
+  return {
+      user:{
+         email: "",
+         password: "",
+       }
+  }
+},
+methods: {
+  register () {
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, this.user.email, this.user.password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        alert("登録しました");
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert(errorCode+","+errorMessage+","+auth);
+        // ..
+      });
+  },
+},
+}
+</script>
