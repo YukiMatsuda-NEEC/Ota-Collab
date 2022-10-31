@@ -1,56 +1,45 @@
 <template>
   <div>
-    <header>
-      
-    </header>
     <section>
-
+      <!--v-modelでdata.user.email紐付け--->
+      <input type=”email” name=”email”  required="required" placeholder="E-mail" v-model="user.email">
+      <!--v-modelでdata.user.password紐付け--->
+      <input type=”password” name=”password” placeholder="password" v-model="user.password">
+      <!--@click="login"でmethods,loginの処理--->
+      <button @click="login" value="ログイン">ログイン</button>
+      <p>{{ uid }}</p>
     </section>
   </div>
 </template>
 
-<style lang="scss" scoped>
-</style>
-
 <script>
-import Title from "~/components/Title.vue";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 export default {
-  name: "IndexPage",
-  components: {
-    Title,
-    profiles,
-  },
-  data() {
-    return {
-      shopName: "パン屋",
-      userName: "田中",
-      isInputMode: false,
-      isEditing: false,
-      profileData: {
-      },
-    };
-  },
-  created() {
-    this.firebase();
-  },
-  methods: {
-    async firebase() {
-      // let docRef = this.$fire.firestore.collection("users").doc("1"); //プロフィール取得
-      // console.log(docRef);
-      //   docRef
-      //     .get()
-      //     .then((doc) => {
-      //       if (doc.exists) {
-      //         console.log("Document data:", doc.data());
-      //       } else {
-      //         // doc.data() will be undefined in this case
-      //         console.log("No such document!");
-      //       }
-      //     })
-      //     .catch((error) => {
-      //       console.log("Error getting document:", error);
-      //     });
+data () {
+  return {
+    user:{
+      email: "",
+      password: "",
     },
+    uid: "",
+  }
+},
+methods: {
+  login(){
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, this.user.email, this.user.password)
+      .then((userCredential) => {
+        // ログイン
+        const user = userCredential.user;
+        this.uid = user.uid;
+        alert("ログインしました");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert(errorCode+","+errorMessage);
+      });
   },
-};
+},
+}
 </script>

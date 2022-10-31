@@ -7,6 +7,7 @@
       <input type=”password” name=”passWord” required="required" placeholder="PassWord" v-model="user.password">
       <!--@click="register"でmethods,registerの処理--->
       <button @click="register">登録</button>
+      <p>{{ uid }}</p>
     </section>
   </div>
 </template>
@@ -16,10 +17,11 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 export default {
 data () {
   return {
-      user:{
-         email: "",
-         password: "",
-       }
+    user:{
+      email: "",
+      password: "",
+    },
+    uid: "",
   }
 },
 methods: {
@@ -27,16 +29,15 @@ methods: {
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, this.user.email, this.user.password)
       .then((userCredential) => {
-        // Signed in 
+        // 登録が成功したらログイン
         const user = userCredential.user;
+        this.uid = user.uid;
         alert("登録しました");
-        // ...
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        alert(errorCode+","+errorMessage+","+auth);
-        // ..
+        alert(errorCode+","+errorMessage);
       });
   },
 },
