@@ -56,6 +56,8 @@ header {
 <script>
 import Title from "~/components/Title.vue";
 import profiles from "~/components/profiles.vue";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+
 export default {
   name: "IndexPage",
   components: {
@@ -68,8 +70,7 @@ export default {
       userName: "田中",
       isInputMode: false,
       isEditing: false,
-      profileData: {
-      },
+      profileData: {},
     };
   },
   created() {
@@ -77,21 +78,10 @@ export default {
   },
   methods: {
     async firebase() {
-      // let docRef = this.$fire.firestore.collection("users").doc("1"); //プロフィール取得
-      // console.log(docRef);
-      //   docRef
-      //     .get()
-      //     .then((doc) => {
-      //       if (doc.exists) {
-      //         console.log("Document data:", doc.data());
-      //       } else {
-      //         // doc.data() will be undefined in this case
-      //         console.log("No such document!");
-      //       }
-      //     })
-      //     .catch((error) => {
-      //       console.log("Error getting document:", error);
-      //     });
+      // let docRef = doc(getFirestore(), "users", "1");
+      // const docSnap = await getDoc(docRef);
+      // console.log(docSnap.data()); 
+      //firebaseテストコード、リロードの度dbを取得してしまうためコメントアウト
     },
     Edit() {
       this.isEditing = !this.isEditing;
