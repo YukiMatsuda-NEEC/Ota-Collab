@@ -16,6 +16,11 @@
         class="header-icon"
       />
       <p class="shop-name">{{ shopName }}</p>
+
+      <!-- テスト中 --------------------------------------------------------------------------- -->
+      <p>{{ offers }}</p>
+      <!-- --------------------------------------------------------------------------- -->
+
     </section>
     <profiles :isEditing="isEditing" />
   </div>
@@ -59,6 +64,25 @@ import profiles from "~/components/profiles.vue";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 export default {
+
+  // テスト中 ---------------------------------------------------------------------------
+
+  async asyncData ({ $axios }) {
+    // バックエンドに送る店のID
+    const slug = 'a001'
+    try {
+      // バックエンドからの戻り値をdataに代入
+      const data = await $axios.$get(`/matching/${slug}`)
+      // offersにオファー相手のIDの配列を代入
+      const offers = data.offers
+      return { offers }
+    } catch (e) {
+      return { offers: e }
+    }
+  },
+
+  // ---------------------------------------------------------------------------
+
   name: "IndexPage",
   components: {
     Title,
