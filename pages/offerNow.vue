@@ -61,6 +61,7 @@ header {
   }
   .profile-icon {
     display: flex;
+    object-fit: cover;
     
     width: 252px;
     height: 92px;

@@ -22,7 +22,6 @@
         </div>
 
         <div class="message">
-          <h3>メッセージ</h3>
           <p class="comment">
             <span>{{ comment }}</span>
           </p>
@@ -83,7 +82,7 @@ header {
   }
 
   div.message {
-    margin: 8px;
+    margin: auto;
     span {
       background: #d9d9d9;
       border-radius: 4px;
