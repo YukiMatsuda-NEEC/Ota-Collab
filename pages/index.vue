@@ -5,12 +5,12 @@
     </header>
     <section class="header-imgs">
       <img
-        src="~/assets/image/sample-image/shop-sample-header.jpg"
+        src="~/assets/image/sample-image/画像4.jpg"
         alt="ヘッダーイメージ"
         class="header-img"
       />
       <img
-        src="~/assets/image/sample-image/shop-sample-icon.jpg"
+        src="~/assets/image/sample-image/kawashimaIcon.jpg"
         alt="ヘッダーアイコン"
         class="header-icon"
       />
@@ -57,6 +57,11 @@
       <div class="profile">
         <Title> 強み、弱み </Title>
         サンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプル
+      </div>
+      <div class="profile">
+        <Title> QRコード </Title>
+        <input type="file" />
+        <button class="guideLine">ガイドライン</button>
       </div>
     </section>
   </div>
