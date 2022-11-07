@@ -6,6 +6,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.env
 
 # Runtime data
 pids
@@ -88,3 +89,6 @@ sw.*
 
 # Vim swap files
 *.swp
+
+# Firestore Secret Key
+./server/ota-collab-firebase-adminsdk-h8lt9-d5aa562d5e.json

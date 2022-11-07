@@ -1,85 +1,109 @@
 <template>
-  <v-card class="d-flex flex-column mx-auto my-6 flat" width="374" color="#fff">
-    <v-card-title class="d-flex justify-center pa-0 mt-6"
-      >ログイン</v-card-title
-    >
-    <v-card-text class="d-flex justify-center flex-column">
-      <v-btn
-        class="fill-width mt-6 text-capitalize caption mx-4"
-        rounded
-        color="#00ACEE"
-        dark
-        depressed
-        height="48px"
-        @click="submitTwitter"
+  <div>
+    <section v-if="true">
+      <img
+        class="icon"
+        :style="isLogin || isSingup ? 'margin-top: 0' : ''"
+        src="~/assets/image/otaCollabIcons/otaIcon.png"
+        alt=""
+      />
+    </section>
+    <section v-if="!isLogin && !isSingup">
+      <ota-button @click="isLogin = true" buttonStyle="login"
+        >ログイン</ota-button
       >
-        twitterでログイン
-      </v-btn>
-      <v-btn
-        class="fill-width mt-6 text-capitalize caption mx-4 mb-6"
-        rounded
-        height="48px"
-        outlined
-        style="border-color: #979797"
-        @click="submitGoogle"
+      <ota-button @click="isSingup = true" buttonStyle="signUp"
+        >新規登録</ota-button
       >
-        <img
-          class="button-logo-img mr-4"
-          src="https://madeby.google.com/static/images/google_g_logo.svg"
-          style="height: 24px"
-        />
-        Googleでログイン
-      </v-btn>
-      <p class="text-center pt-3 mt-3 text-subtitle-1 siginIn-border-top">
-        メールアドレスでログイン
-      </p>
-      <v-form class="mx-9" ref="form" v-model="valid">
-        <v-text-field
-          placeholder="メールアドレス"
-          outlined
-          dense
-          :rules="mailRules"
-        ></v-text-field>
-        <v-text-field
-          placeholder="パスワード"
-          outlined
-          dense
-          :rules="pwRules"
-        ></v-text-field>
-        <p class="pointer" @click="forgetPw">パスワードを忘れた方</p>
-        <div class="text-center">
-          <v-btn class="primary" :disabled="!valid">ログイン</v-btn>
-        </div>
-      </v-form>
-    </v-card-text>
-  </v-card>
+    </section>
+    <section class="Login-inputs" v-if="isLogin || isSingup">
+      <ota-input
+        placeholder="メールアドレス・ID"
+        v-model="email"
+        inputStyle="LoginInput"
+      ></ota-input>
+      <ota-input
+        placeholder="パスワード"
+        v-model="password"
+        inputStyle="LoginInput"
+      ></ota-input>
+      <ota-button v-if="isLogin" @click="onLoginButton" buttonStyle="login"
+        >ログイン</ota-button
+      >
+      <ota-button v-else @click="onSingupButton" buttonStyle="signUp"
+        >新規登録</ota-button
+      >
+    </section>
+  </div>
 </template>
-<style lang="scss" scoped></style>
-
+<style lang="scss" scoped>
+.Login-inputs {
+  padding: 0 54px;
+}
+section {
+  text-align: center;
+}
+.icon {
+  margin-top: 107px;
+  height: 175px;
+  width: 175px;
+}
+</style>
 <script>
+import otaButton from "~/components/otaButton.vue";
+import otaInput from "~/components/otaInput.vue";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+
 export default {
+  name: "LoginPage",
   data() {
     return {
-      valid: false,
-      mailRules: [
-        (v) => !!v || "mail is required",
-        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-      ],
-      pwRules: [(v) => !!v || "password is required"],
+      password: "",
+      email: "",
+      isLogin: false,
+      isSingup: false,
     };
   },
+  components: {
+    otaButton,
+    otaInput,
+  },
   methods: {
-    validate() {
-      this.$refs.form.validate();
+    onLoginButton() {
+      console.log(process.env.API_KEY);
+      const auth = getAuth();
+      signInWithEmailAndPassword(auth, this.email, this.password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.error(errorCode, errorMessage);
+        });
     },
-    submitTwitte() {
-      // ツイッターログインの処理
-    },
-    submitGoogle() {
-      // グーグルログインの処理
-    },
-    forgetPw() {
-      // パスワードを忘れた時の処理
+    async onSingupButton() {
+      const auth = getAuth();
+      await createUserWithEmailAndPassword(auth, this.email, this.password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.error(errorCode, errorMessage);
+          // ..
+        });
     },
   },
 };
