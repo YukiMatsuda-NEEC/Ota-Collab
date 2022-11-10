@@ -9,7 +9,7 @@ const firebaseConfig = {
   appId: process.env.FB_APP_ID,
   measurementId: process.env.FB_MEASUREMENT_ID,
 };
-console.log(firebaseConfig);
+// console.log(firebaseConfig);
 const firebaseApp = initializeApp(firebaseConfig);
 export default (context, inject) => {
   inject("firebase", firebaseApp);
