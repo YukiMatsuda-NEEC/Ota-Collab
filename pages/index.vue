@@ -6,16 +6,21 @@
     </header>
     <section class="header-imgs">
       <img
-        src="~/assets/image/sample-image/shop-sample-header.jpg"
+        src="~/assets/image/sample-image/画像4.jpg"
         alt="ヘッダーイメージ"
         class="header-img"
       />
       <img
-        src="~/assets/image/sample-image/shop-sample-icon.jpg"
+        src="~/assets/image/sample-image/kawashimaIcon.jpg"
         alt="ヘッダーアイコン"
         class="header-icon"
       />
       <p class="shop-name">{{ shopName }}</p>
+
+      <!-- テスト中 --------------------------------------------------------------------------- -->
+      <p>{{ offers }}</p>
+      <!-- --------------------------------------------------------------------------- -->
+
     </section>
     <profiles :isEditing="isEditing" />
   </div>
@@ -56,7 +61,28 @@ header {
 <script>
 import Title from "~/components/Title.vue";
 import profiles from "~/components/profiles.vue";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+
 export default {
+
+  // テスト中 ---------------------------------------------------------------------------
+
+  async asyncData ({ $axios }) {
+    // バックエンドに送る店のID
+    const slug = 'a001'
+    try {
+      // バックエンドからの戻り値をdataに代入
+      const data = await $axios.$get(`/matching/${slug}`)
+      // offersにオファー相手のIDの配列を代入
+      const offers = data.offers
+      return { offers }
+    } catch (e) {
+      return { offers: e }
+    }
+  },
+
+  // ---------------------------------------------------------------------------
+
   name: "IndexPage",
   components: {
     Title,
@@ -68,9 +94,19 @@ export default {
       userName: "田中",
       isInputMode: false,
       isEditing: false,
+      profileData: {},
     };
   },
+  created() {
+    this.firebase();
+  },
   methods: {
+    async firebase() {
+      // let docRef = doc(getFirestore(), "users", "1");
+      // const docSnap = await getDoc(docRef);
+      // console.log(docSnap.data()); 
+      //firebaseテストコード、リロードの度dbを取得してしまうためコメントアウト
+    },
     Edit() {
       this.isEditing = !this.isEditing;
     },
