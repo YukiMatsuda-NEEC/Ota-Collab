@@ -12,7 +12,6 @@ class User:
     # コンストラクタ（デフォルト：userID=0）
     def __init__(self, userID=0):
         self.userID = userID
-#        numberOfPeople = getNumberOfPeople()
         self.managementIssuesArray = self.getManagementIssues(userID)
 
     # 経営課題を取得する関数
