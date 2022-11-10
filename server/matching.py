@@ -49,7 +49,7 @@ class User:
         if(ss["unit_price"] == True):
             managementIssuesArray += 2**0
         
-        print(managementIssuesArray)
+#        print(managementIssuesArray)
         return managementIssuesArray
 
 def getNumberOfPeople():
@@ -62,7 +62,7 @@ def getNumberOfPeople():
 
 def matching(person: User):                  # 引数personとはマッチングしたい本人のこと
     numberOfPeople = getNumberOfPeople()
-    print("numberOfPeople: "+str(numberOfPeople))
+#    print("numberOfPeople: "+str(numberOfPeople))
     targetUser = []                    # マッチング相手の配列
     # マッチング相手の経営課題情報をユーザーID上から順番に取ってくる
     for i in range(0, numberOfPeople, 1):
@@ -78,7 +78,7 @@ def matching(person: User):                  # 引数personとはマッチング
     # ユーザーIDが若い順に経営課題一致度を比較している（「最多フラグ一致度」を調べるため）
     for i in range(0, len(targetUser), 1):
         currentMatchingParam = int(person.managementIssuesArray) & bin(targetUser[i].managementIssuesArray).count("1")
-        print("current: "+str(currentMatchingParam)+", "+str(int(person.managementIssuesArray) & int(targetUser[i].managementIssuesArray)))
+#        print("current: "+str(currentMatchingParam)+", "+str(int(person.managementIssuesArray) & int(targetUser[i].managementIssuesArray)))
         # もしかつてない一致度を持つユーザーが現れたらその一致度を「最多フラグ一致度」とする
         if(currentMatchingParam >= maxMatchingParam):
             maxMatchingParam = currentMatchingParam
@@ -98,7 +98,7 @@ def main(user: int):
     offerUser = matching(person)
     for i in range(len(offerUser)):
         offerUserID.append(offerUser[i].userID)
-        print(offerUser[i].userID)
+#        print(offerUser[i].userID)
     return offerUserID
 
 if __name__ == '__main__':
