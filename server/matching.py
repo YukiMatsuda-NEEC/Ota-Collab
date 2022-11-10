@@ -21,7 +21,7 @@ class User:
         doc_ref = db.collection('ManagementIssues').document(str(userID))
         snapshot = doc_ref.get()
         ss = snapshot.to_dict()
-        print(str(userID) +": "+ str(ss))
+#        print(str(userID) +": "+ str(ss))
         if(ss["attracting_customers"] == True):
             managementIssuesArray += 2**12
         if(ss["awareness"] == True):
