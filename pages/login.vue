@@ -57,6 +57,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { doc, setDoc, getFirestore } from "firebase/firestore";
 
 export default {
   name: "LoginPage",
@@ -66,6 +67,7 @@ export default {
       email: "",
       isLogin: false,
       isSingup: false,
+      lastNum: "",
     };
   },
   components: {
@@ -73,15 +75,26 @@ export default {
     otaInput,
   },
   methods: {
+    returnTop(){
+        this.$router.push('/')
+    },
+    async getLastNum() {
+      try {
+        // usersの最後の連番を取得
+        const data = await this.$axios.$get("/getLastNum");
+        this.lastNum = data.lastNum;
+      } catch (e) {
+        console.error(e);
+      }
+    },
     onLoginButton() {
       console.log(process.env.API_KEY);
       const auth = getAuth();
       signInWithEmailAndPassword(auth, this.email, this.password)
         .then((userCredential) => {
           // Signed in
-          const user = userCredential.user;
-          console.log(user);
-          // ...
+          // const user = userCredential.user;
+          this.returnTop()
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -92,10 +105,15 @@ export default {
     async onSingupButton() {
       const auth = getAuth();
       await createUserWithEmailAndPassword(auth, this.email, this.password)
-        .then((userCredential) => {
+        .then(async (userCredential) => {
           // Signed in
           const user = userCredential.user;
-          console.log(user);
+          console.log(user.uid);
+          let db = getFirestore();
+          await setDoc(doc(db, "uid_to_num", user.uid), {
+            num: "100",
+          });
+          this.returnTop()
           // ...
         })
         .catch((error) => {
