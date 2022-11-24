@@ -83,7 +83,7 @@ export default {
   },
   created() {
     this.firebase();
-    this.matching();
+    // this.matching();
     this.getLastNum();
   },
   methods: {
@@ -112,6 +112,7 @@ export default {
       try {
         // usersの最後の連番を取得
         const data = await this.$axios.$get('/getLastNum')
+        console.log(data,"data")
         this.lastNum = data.lastNum
       } catch (e) {
         console.error(e)
