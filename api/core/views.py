@@ -5,7 +5,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-cred = credentials.Certificate('./ota-collab-firebase-adminsdk-h8lt9-d5aa562d5e.json')
+cred = credentials.Certificate('/home/suzukit/codes/Ota-Collab/api/core/ota-collab-firebase-adminsdk-h8lt9-d5aa562d5e.json')
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
@@ -28,11 +28,11 @@ def matching(request, slug):
 @api_view(["GET"])
 def getLastNum(request):
     if request.method == "GET":
-        docs = db.collection(u'users').stream()
-        lastNum = 0
-        for doc in docs:
-            if (int(doc.id) > int(lastNum)):
-                lastNum = doc.id
-        last_num = LastNumClass(str(lastNum))
+        doc_ref = db.collection('last_num').document('7jLx5j1Ng3nIPmjGiced')
+        snapshot = doc_ref.get()
+        doc = snapshot.to_dict()
+        ln = doc["lastNum"] + 1  # 返す前に1加算
+        doc_ref.update({'lastNum': ln})  #lust_numDBの更新 
+        last_num = LastNumClass(str(ln))
         LastNum = LastNumSerializer(last_num)
         return Response(LastNum.data)

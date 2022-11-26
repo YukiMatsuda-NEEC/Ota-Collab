@@ -67,7 +67,6 @@ export default {
       email: "",
       isLogin: false,
       isSingup: false,
-      lastNum: "",
     };
   },
   components: {
@@ -77,15 +76,6 @@ export default {
   methods: {
     returnTop(){
         this.$router.push('/')
-    },
-    async getLastNum() {
-      try {
-        // usersの最後の連番を取得
-        const data = await this.$axios.$get("/getLastNum");
-        this.lastNum = data.lastNum;
-      } catch (e) {
-        console.error(e);
-      }
     },
     onLoginButton() {
       console.log(process.env.API_KEY);
@@ -109,9 +99,27 @@ export default {
           // Signed in
           const user = userCredential.user;
           console.log(user.uid);
+          // 連番の最後を取得
           let db = getFirestore();
+          const data = await this.$axios.$get('/getLastNum');
+          const userNum = data.lastNum;
+          // uidと連番の紐づけを作成
           await setDoc(doc(db, "uid_to_num", user.uid), {
-            num: "100",
+            num: userNum,
+          });
+          // user情報のひな形を作成
+          await setDoc(doc(db, "users", userNum), {
+            address: "",
+            facebook: "",
+            industry: "",
+            instagram: "",
+            introduction: "",
+            line_administrator: "",
+            line_furigana: "",
+            message: "",
+            representative: "",
+            shop_name: "",
+            twitter: "",
           });
           this.returnTop()
           // ...

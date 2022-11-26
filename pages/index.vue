@@ -84,7 +84,7 @@ export default {
   created() {
     this.firebase();
     // this.matching();
-    this.getLastNum();
+    // this.getLastNum();
   },
   methods: {
     async firebase() {
@@ -98,24 +98,24 @@ export default {
     },
     async matching () {
       // バックエンドに送る店のID
-      const slug = 'a001'
+      const slug = 'a001';
       try {
         // バックエンドからの戻り値をdataに代入
-        const data = await this.$axios.$get(`/matching/${slug}`)
+        const data = await this.$axios.$get(`/matching/${slug}`);
         // offersにオファー相手のIDの配列を代入
-        this.offers = data.offers
+        this.offers = data.offers;
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
     },
     async getLastNum () {
       try {
         // usersの最後の連番を取得
-        const data = await this.$axios.$get('/getLastNum')
-        console.log(data,"data")
-        this.lastNum = data.lastNum
+        const data = await this.$axios.$get('/getLastNum');
+        console.log(data,"data");
+        this.lastNum = data.lastNum;
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
     }, 
   },
