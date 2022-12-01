@@ -57,6 +57,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { doc, setDoc, getFirestore } from "firebase/firestore";
 
 export default {
   name: "LoginPage",
@@ -73,15 +74,17 @@ export default {
     otaInput,
   },
   methods: {
+    returnTop(){
+        this.$router.push('/')
+    },
     onLoginButton() {
       console.log(process.env.API_KEY);
       const auth = getAuth();
       signInWithEmailAndPassword(auth, this.email, this.password)
         .then((userCredential) => {
           // Signed in
-          const user = userCredential.user;
-          console.log(user);
-          // ...
+          // const user = userCredential.user;
+          this.returnTop()
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -92,10 +95,33 @@ export default {
     async onSingupButton() {
       const auth = getAuth();
       await createUserWithEmailAndPassword(auth, this.email, this.password)
-        .then((userCredential) => {
+        .then(async (userCredential) => {
           // Signed in
           const user = userCredential.user;
-          console.log(user);
+          console.log(user.uid);
+          // 連番の最後を取得
+          let db = getFirestore();
+          const data = await this.$axios.$get('/getLastNum');
+          const userNum = data.lastNum;
+          // uidと連番の紐づけを作成
+          await setDoc(doc(db, "uid_to_num", user.uid), {
+            num: userNum,
+          });
+          // user情報のひな形を作成
+          await setDoc(doc(db, "users", userNum), {
+            address: "",
+            facebook: "",
+            industry: "",
+            instagram: "",
+            introduction: "",
+            line_administrator: "",
+            line_furigana: "",
+            message: "",
+            representative: "",
+            shop_name: "",
+            twitter: "",
+          });
+          this.returnTop()
           // ...
         })
         .catch((error) => {

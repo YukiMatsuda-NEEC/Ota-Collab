@@ -5,11 +5,11 @@
       <p @click="Edit">Edit</p>
     </header>
     <section class="header-imgs">
-      <img
+      <!-- <img
         src="~/assets/image/sample-image/画像4.jpg"
         alt="ヘッダーイメージ"
         class="header-img"
-      />
+      /> -->
       <img
         src="~/assets/image/sample-image/kawashimaIcon.jpg"
         alt="ヘッダーアイコン"
@@ -19,6 +19,7 @@
 
       <!-- テスト中 --------------------------------------------------------------------------- -->
       <p>{{ offers }}</p>
+      <p>{{ lastNum }}</p>
       <!-- --------------------------------------------------------------------------- -->
 
     </section>
@@ -64,25 +65,6 @@ import profiles from "~/components/profiles.vue";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 export default {
-
-  // テスト中 ---------------------------------------------------------------------------
-
-  async asyncData ({ $axios }) {
-    // バックエンドに送る店のID
-    const slug = 'a001'
-    try {
-      // バックエンドからの戻り値をdataに代入
-      const data = await $axios.$get(`/matching/${slug}`)
-      // offersにオファー相手のIDの配列を代入
-      const offers = data.offers
-      return { offers }
-    } catch (e) {
-      return { offers: e }
-    }
-  },
-
-  // ---------------------------------------------------------------------------
-
   name: "IndexPage",
   components: {
     Title,
@@ -95,10 +77,14 @@ export default {
       isInputMode: false,
       isEditing: false,
       profileData: {},
+      offers: [],
+      lastNum: "",
     };
   },
   created() {
     this.firebase();
+    // this.matching();
+    // this.getLastNum();
   },
   methods: {
     async firebase() {
@@ -110,6 +96,28 @@ export default {
     Edit() {
       this.isEditing = !this.isEditing;
     },
+    async matching () {
+      // バックエンドに送る店のID
+      const slug = 'a001';
+      try {
+        // バックエンドからの戻り値をdataに代入
+        const data = await this.$axios.$get(`/matching/${slug}`);
+        // offersにオファー相手のIDの配列を代入
+        this.offers = data.offers;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    async getLastNum () {
+      try {
+        // usersの最後の連番を取得
+        const data = await this.$axios.$get('/getLastNum');
+        console.log(data,"data");
+        this.lastNum = data.lastNum;
+      } catch (e) {
+        console.error(e);
+      }
+    }, 
   },
 };
 </script>
