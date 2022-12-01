@@ -1,11 +1,10 @@
 from django.urls import path, include
-from .views import matching
 from . import views
 
 app_name = 'core'
 
 urlpatterns = [
-    # matching/<slug>にアクセスしたらviewsのmatching関数を呼ぶ
-    path("matching/<slug>", views.matching, name='matching'),
+    # matching/<slug>にアクセスしたらviewsのreturnMatching関数を呼ぶ
+    path("matching/<slug>", views.returnMatching, name='returnMatching'),
     path("getLastNum", views.getLastNum, name='getLastNum'),
 ]

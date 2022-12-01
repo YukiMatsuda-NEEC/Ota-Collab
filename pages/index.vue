@@ -63,6 +63,7 @@ header {
 import Title from "~/components/Title.vue";
 import profiles from "~/components/profiles.vue";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getAuth, onAuthStateChanged, } from "firebase/auth";
 
 export default {
   name: "IndexPage",
@@ -79,12 +80,16 @@ export default {
       profileData: {},
       offers: [],
       lastNum: "",
+      uid: "",
     };
   },
   created() {
     this.firebase();
     // this.matching();
     // this.getLastNum();
+  },
+  mounted() {
+    this.matching();  // createdだと二度実行される場合があるため
   },
   methods: {
     async firebase() {
@@ -97,12 +102,27 @@ export default {
       this.isEditing = !this.isEditing;
     },
     async matching () {
-      // バックエンドに送る店のID
-      const slug = 'a001';
+      // ログイン中のユーザのuid
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          this.uid = user.uid;
+        }
+      });
+      this.uid = "testUserdesu";       // テスト中(このページにログインして移動できるなら消す)
+      // ログイン中のユーザの連番
+      const db = getFirestore();
+      const docRef = doc(db, "uid_to_num", this.uid);
+      const docSnap = await getDoc(docRef);
+      let userNum = "";
+      if (docSnap.exists()) {
+        userNum = docSnap.data().num;
+      } else {
+        console.log("No such document.");
+      }
+      // マッチングapiでマッチング相手の連番の配列を取得
       try {
-        // バックエンドからの戻り値をdataに代入
-        const data = await this.$axios.$get(`/matching/${slug}`);
-        // offersにオファー相手のIDの配列を代入
+        const data = await this.$axios.$get(`/matching/${userNum}`);
         this.offers = data.offers;
       } catch (e) {
         console.error(e);
