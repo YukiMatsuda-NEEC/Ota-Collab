@@ -45,49 +45,59 @@
   <section class="profiles" v-else>
     <div class="profile">
       <Title> コラボ願望 </Title>
-      <otaInput :isTextarea="true" />
+      <otaInput v-model="message" :isTextarea="true" />
     </div>
     <div class="profile">
       <Title :isUnderline="true"> プロフィール </Title>
       <table>
         <tr>
-          <td class="profile-title">お名前</td>
+          <td class="profile-title">店舗名</td>
           <td class="profile-value">
-            <otaInput />
+            <otaInput v-model="shop_name"/>
           </td>
         </tr>
         <tr>
           <td class="profile-title">フリガナ</td>
           <td class="profile-value">
-            <otaInput />
+            <otaInput v-model="furigana"/>
           </td>
         </tr>
         <tr>
           <td class="profile-title">業種</td>
           <td class="profile-value">
-            <select name="" id="">
-              <option value="">小売</option>
-              <option value="">配送</option>
-            </select>
+            <otaInput v-model="industry"/>
           </td>
         </tr>
         <tr>
           <td class="profile-title">代表者名</td>
           <td class="profile-value">
-            <otaInput />
+            <otaInput v-model="representative"/>
+          </td>
+        </tr>
+        <tr>
+          <td class="profile-title">代表者名</td>
+          <td class="profile-value">
+            <otaInput v-model="representative"/>
           </td>
         </tr>
         <tr>
           <td class="profile-title">店舗住所</td>
           <td class="profile-value">
-            <otaInput />
+            <otaInput v-model="address"/>
+          </td>
+        </tr>
+        <tr>
+          <td class="profile-title">店舗住所</td>
+          <td class="profile-value">
+            <otaInput v-model="address"/>
           </td>
         </tr>
       </table>
     </div>
     <div class="profile">
       <Title> お店紹介 </Title>
-      <otaInput :isTextarea="true" />
+      <otaInput v-model="introduction" :isTextarea="true" />
+      <Button @click="save">save</Button>
     </div>
     <div class="profile">
       <Title> 経営課題 </Title>
@@ -96,49 +106,110 @@
           id="1"
           class="issue-checkbox"
           type="checkbox"
-          value="1"
+          value="attracting_customers"
           v-model="issues"
         />
-        <label class="issue" for="1">サンプル</label>
+        <label class="issue" for="1">集客</label>
         <input
           id="2"
           class="issue-checkbox"
           type="checkbox"
-          value="2"
+          value="awareness"
           v-model="issues"
         />
-        <label class="issue" for="2">サンプル</label>
+        <label class="issue" for="2">認知度</label>
         <input
           id="3"
           class="issue-checkbox"
           type="checkbox"
-          value="3"
+          value="branding"
           v-model="issues"
         />
-        <label class="issue" for="3">サンプル</label>
+        <label class="issue" for="3">ブランディング</label>
         <input
           id="4"
           class="issue-checkbox"
           type="checkbox"
-          value="4"
+          value="employee_training"
           v-model="issues"
         />
-        <label class="issue" for="4">サンプル</label>
+        <label class="issue" for="4">社員教育</label>
         <input
           id="5"
           class="issue-checkbox"
           type="checkbox"
-          value="5"
+          value="expansion"
           v-model="issues"
         />
-        <label class="issue" for="5">サンプル</label>
+        <label class="issue" for="5">販路拡大</label>
+        <input
+          id="6"
+          class="issue-checkbox"
+          type="checkbox"
+          value="frequency"
+          v-model="issues"
+        />
+        <label class="issue" for="6">来店頻度</label>
+        <input
+          id="7"
+          class="issue-checkbox"
+          type="checkbox"
+          value="human_resources"
+          v-model="issues"
+        />
+        <label class="issue" for="7">人材確保</label>
+        <input
+          id="8"
+          class="issue-checkbox"
+          type="checkbox"
+          value="new_customers"
+          v-model="issues"
+        />
+        <label class="issue" for="8">新規顧客</label>
+        <input
+          id="9"
+          class="issue-checkbox"
+          type="checkbox"
+          value="outflow"
+          v-model="issues"
+        />
+        <label class="issue" for="9">流失客</label>
+        <input
+          id="10"
+          class="issue-checkbox"
+          type="checkbox"
+          value="purchases"
+          v-model="issues"
+        />
+        <label class="issue" for="10">購入点数</label>
+        <input
+          id="11"
+          class="issue-checkbox"
+          type="checkbox"
+          value="repeat_rate"
+          v-model="issues"
+        />
+        <label class="issue" for="11">リピート率</label>
+        <input
+          id="12"
+          class="issue-checkbox"
+          type="checkbox"
+          value="sales"
+          v-model="issues"
+        />
+        <label class="issue" for="12">売上</label>
+        <input
+          id="13"
+          class="issue-checkbox"
+          type="checkbox"
+          value="unit_price"
+          v-model="issues"
+        />
+        <label class="issue" for="13">商品単価</label>
         <!-- TODO:v-forでの問題を自動挿入 -->
       </div>
     </div>
-    <div class="profile">
-      <Title> 強み、弱み </Title>
-      <otaInput :isTextarea="true" />
-    </div>
+    
   </section>
 </template>
 <script>
@@ -157,12 +228,25 @@ export default {
     Title,
     otaInput,
   },
+  methods:{
+    save(){
+      console.log(this.name);
+    }
+  },
   data() {
     return {
       shopName: "のりや",
       userName: "田中",
       isInputMode: false,
       issues: [],
+      message:"",
+      shop_name:"",
+      furigana:"",
+      industry:"",
+      representative:"",
+      address:"",
+      introduction:""
+
     };
   },
 };
