@@ -5,21 +5,21 @@
       <p @click="Edit">Edit</p>
     </header>
     <section class="header-imgs">
-      <!-- <img
-        src="~/assets/image/sample-image/画像4.jpg"
+      <img
+        src="~/assets/image/sample-image/kawashimaHeader.jpg"
         alt="ヘッダーイメージ"
         class="header-img"
-      /> -->
+      />
       <img
         src="~/assets/image/sample-image/kawashimaIcon.jpg"
         alt="ヘッダーアイコン"
         class="header-icon"
       />
-      <p class="shop-name">{{ shopName }}</p>
+      <p class="shop-name">{{ shop_name }}</p>
 
       <!-- テスト中 --------------------------------------------------------------------------- -->
-      <p>{{ offers }}</p>
-      <p>{{ lastNum }}</p>
+      <!-- <p>{{ offers }}</p>
+      <p>{{ lastNum }}</p> -->
       <!-- --------------------------------------------------------------------------- -->
 
     </section>
@@ -36,6 +36,7 @@ header {
 }
 .header-imgs {
   text-align: center;
+  height: 240px;
 
   .header-img {
     height: 130px;
@@ -73,14 +74,14 @@ export default {
   },
   data() {
     return {
-      shopName: "パン屋",
+      shop_name: "",
       userName: "田中",
       isInputMode: false,
       isEditing: false,
       profileData: {},
       offers: [],
       lastNum: "",
-      uid: "",
+      userNum: "",
     };
   },
   created() {
@@ -88,8 +89,10 @@ export default {
     // this.matching();
     // this.getLastNum();
   },
-  mounted() {
-    this.matching();  // createdだと二度実行される場合があるため
+  async mounted() {
+    await this.getUserNum();
+    this.getShopName();
+    // this.matching();  // createdだと二度実行される場合があるため
   },
   methods: {
     async firebase() {
@@ -101,43 +104,55 @@ export default {
     Edit() {
       this.isEditing = !this.isEditing;
     },
-    async matching () {
-      // ログイン中のユーザのuid
+    // ログイン中のユーザの連番を取得
+    async getUserNum(){
+      let uid = "8J5DyxH8IgZXOJ97JL2ZMUtFWdz2";   // テスト中(このページにログインして移動できるなら空にするか初期値決める)
       const auth = getAuth();
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          this.uid = user.uid;
+          uid = user.uid;
         }
       });
-      this.uid = "testUserdesu";       // テスト中(このページにログインして移動できるなら消す)
-      // ログイン中のユーザの連番
       const db = getFirestore();
-      const docRef = doc(db, "uid_to_num", this.uid);
-      const docSnap = await getDoc(docRef);
-      let userNum = "";
+      const docSnap = await getDoc(doc(db, "uid_to_num", uid));
       if (docSnap.exists()) {
-        userNum = docSnap.data().num;
+        this.userNum = docSnap.data().num;
       } else {
         console.log("No such document.");
       }
-      // マッチングapiでマッチング相手の連番の配列を取得
+    },
+    // 店舗名の取得
+    async getShopName(){
+      const db = getFirestore();
+      const docSnap = await getDoc(doc(db, "users", this.userNum));
+      if (docSnap.exists()) {
+        const user = docSnap.data();
+        this.shop_name = user.shop_name;
+      } else {
+        console.log("No such document.");
+      }
+    },
+    // ▽マッチング画面に移動▽
+    // マッチングapiでマッチング相手の連番の配列（ユーザ情報の配列にするか？）を取得
+    async matching () {
       try {
-        const data = await this.$axios.$get(`/matching/${userNum}`);
+        const data = await this.$axios.$get(`/matching/${this.userNum}`);
         this.offers = data.offers;
       } catch (e) {
         console.error(e);
       }
     },
-    async getLastNum () {
-      try {
-        // usersの最後の連番を取得
-        const data = await this.$axios.$get('/getLastNum');
-        console.log(data,"data");
-        this.lastNum = data.lastNum;
-      } catch (e) {
-        console.error(e);
-      }
-    }, 
+    // ▽新規登録画面に移動済み▽
+    // async getLastNum () {
+    //   try {
+    //     // usersの最後の連番を取得
+    //     const data = await this.$axios.$get('/getLastNum');
+    //     console.log(data,"data");
+    //     this.lastNum = data.lastNum;
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // }, 
   },
 };
 </script>

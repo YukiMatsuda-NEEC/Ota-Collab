@@ -2,50 +2,169 @@
   <section class="profiles" v-if="isEditing">
     <div class="profile">
       <Title> コラボ願望 </Title>
-      サンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプル
+      {{ message }}
     </div>
     <div class="profile">
       <Title :isUnderline="true"> プロフィール </Title>
       <table>
         <tr>
-          <td class="profile-title">お名前</td>
-          <td class="profile-value">{{ userName }}</td>
-        </tr>
-        <tr>
-          <td class="profile-title">フリガナ</td>
-          <td class="profile-value">{{ userName }}</td>
-        </tr>
-        <tr>
-          <td class="profile-title">業種</td>
-          <td class="profile-value">{{ userName }}</td>
+          <td class="profile-title">店舗名</td>
+          <td class="profile-value">{{ shop_name }}</td>
         </tr>
         <tr>
           <td class="profile-title">代表者名</td>
-          <td class="profile-value">{{ userName }}</td>
+          <td class="profile-value">{{ representative }}</td>
+        </tr>
+        <tr>
+          <td class="profile-title">業種</td>
+          <td class="profile-value">{{ industry }}</td>
         </tr>
         <tr>
           <td class="profile-title">店舗住所</td>
-          <td class="profile-value">{{ userName }}</td>
+          <td class="profile-value">{{ address }}</td>
+        </tr>
+        <tr>
+          <td class="profile-title">ライン管理者</td>
+          <td class="profile-value">{{ line_administrator }}</td>
+        </tr>
+        <tr>
+          <td class="profile-title">管理者フリガナ</td>
+          <td class="profile-value">{{ line_furigana }}</td>
         </tr>
       </table>
     </div>
     <div class="profile">
       <Title> お店紹介 </Title>
-      サンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプル
+      {{ introduction }}
     </div>
     <div class="profile">
       <Title> 経営課題 </Title>
-      サンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプル
-    </div>
-    <div class="profile">
-      <Title> 強み、弱み </Title>
-      サンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプル
+      <div class="profile-issues">
+        <input
+          id="1"
+          class="issue-checkbox"
+          type="checkbox"
+          value="1"
+          v-model="issues"
+          disabled
+        />
+        <label class="issue" for="1">集客</label>
+        <input
+          id="2"
+          class="issue-checkbox"
+          type="checkbox"
+          value="2"
+          v-model="issues"
+          disabled
+        />
+        <label class="issue" for="2">認知度</label>
+        <input
+          id="3"
+          class="issue-checkbox"
+          type="checkbox"
+          value="3"
+          v-model="issues"
+          disabled
+        />
+        <label class="issue" for="3">ブランディング</label>
+        <input
+          id="4"
+          class="issue-checkbox"
+          type="checkbox"
+          value="4"
+          v-model="issues"
+          disabled
+        />
+        <label class="issue" for="4">社員教育</label>
+        <input
+          id="5"
+          class="issue-checkbox"
+          type="checkbox"
+          value="5"
+          v-model="issues"
+          disabled
+        />
+        <label class="issue" for="5">販路拡大</label>
+        <input
+          id="6"
+          class="issue-checkbox"
+          type="checkbox"
+          value="6"
+          v-model="issues"
+          disabled
+        />
+        <label class="issue" for="6">来店頻度</label>
+        <input
+          id="7"
+          class="issue-checkbox"
+          type="checkbox"
+          value="7"
+          v-model="issues"
+          disabled
+        />
+        <label class="issue" for="7">人材確保</label>
+        <input
+          id="8"
+          class="issue-checkbox"
+          type="checkbox"
+          value="8"
+          v-model="issues"
+          disabled
+        />
+        <label class="issue" for="8">新規顧客</label>
+        <input
+          id="9"
+          class="issue-checkbox"
+          type="checkbox"
+          value="9"
+          v-model="issues"
+          disabled
+        />
+        <label class="issue" for="9">流失客</label>
+        <input
+          id="10"
+          class="issue-checkbox"
+          type="checkbox"
+          value="10"
+          v-model="issues"
+          disabled
+        />
+        <label class="issue" for="10">購入点数</label>
+        <input
+          id="11"
+          class="issue-checkbox"
+          type="checkbox"
+          value="11"
+          v-model="issues"
+          disabled
+        />
+        <label class="issue" for="11">リピート率</label>
+        <input
+          id="12"
+          class="issue-checkbox"
+          type="checkbox"
+          value="12"
+          v-model="issues"
+          disabled
+        />
+        <label class="issue" for="12">売上</label>
+        <input
+          id="13"
+          class="issue-checkbox"
+          type="checkbox"
+          value="13"
+          v-model="issues"
+          disabled
+        />
+        <label class="issue" for="13">商品単価</label>
+      </div>
     </div>
   </section>
   <section class="profiles" v-else>
     <div class="profile">
       <Title> コラボ願望 </Title>
       <otaInput v-model="message" :isTextarea="true" />
+      <textarea v-model="message"></textarea>
     </div>
     <div class="profile">
       <Title :isUnderline="true"> プロフィール </Title>
@@ -57,9 +176,9 @@
           </td>
         </tr>
         <tr>
-          <td class="profile-title">フリガナ</td>
+          <td class="profile-title">代表者名</td>
           <td class="profile-value">
-            <otaInput v-model="furigana"/>
+            <otaInput v-model="representative"/>
           </td>
         </tr>
         <tr>
@@ -69,27 +188,21 @@
           </td>
         </tr>
         <tr>
-          <td class="profile-title">代表者名</td>
-          <td class="profile-value">
-            <otaInput v-model="representative"/>
-          </td>
-        </tr>
-        <tr>
-          <td class="profile-title">代表者名</td>
-          <td class="profile-value">
-            <otaInput v-model="representative"/>
-          </td>
-        </tr>
-        <tr>
           <td class="profile-title">店舗住所</td>
           <td class="profile-value">
             <otaInput v-model="address"/>
           </td>
         </tr>
         <tr>
-          <td class="profile-title">店舗住所</td>
+          <td class="profile-title">ライン管理者</td>
           <td class="profile-value">
-            <otaInput v-model="address"/>
+            <otaInput v-model="line_administrator"/>
+          </td>
+        </tr>
+        <tr>
+          <td class="profile-title">管理者フリガナ</td>
+          <td class="profile-value">
+            <otaInput v-model="line_furigana"/>
           </td>
         </tr>
       </table>
@@ -97,7 +210,7 @@
     <div class="profile">
       <Title> お店紹介 </Title>
       <otaInput v-model="introduction" :isTextarea="true" />
-      <Button @click="save">save</Button>
+      <textarea v-model="introduction"></textarea>
     </div>
     <div class="profile">
       <Title> 経営課題 </Title>
@@ -106,7 +219,7 @@
           id="1"
           class="issue-checkbox"
           type="checkbox"
-          value="attracting_customers"
+          value="1"
           v-model="issues"
         />
         <label class="issue" for="1">集客</label>
@@ -114,7 +227,7 @@
           id="2"
           class="issue-checkbox"
           type="checkbox"
-          value="awareness"
+          value="2"
           v-model="issues"
         />
         <label class="issue" for="2">認知度</label>
@@ -122,7 +235,7 @@
           id="3"
           class="issue-checkbox"
           type="checkbox"
-          value="branding"
+          value="3"
           v-model="issues"
         />
         <label class="issue" for="3">ブランディング</label>
@@ -130,7 +243,7 @@
           id="4"
           class="issue-checkbox"
           type="checkbox"
-          value="employee_training"
+          value="4"
           v-model="issues"
         />
         <label class="issue" for="4">社員教育</label>
@@ -138,7 +251,7 @@
           id="5"
           class="issue-checkbox"
           type="checkbox"
-          value="expansion"
+          value="5"
           v-model="issues"
         />
         <label class="issue" for="5">販路拡大</label>
@@ -146,7 +259,7 @@
           id="6"
           class="issue-checkbox"
           type="checkbox"
-          value="frequency"
+          value="6"
           v-model="issues"
         />
         <label class="issue" for="6">来店頻度</label>
@@ -154,7 +267,7 @@
           id="7"
           class="issue-checkbox"
           type="checkbox"
-          value="human_resources"
+          value="7"
           v-model="issues"
         />
         <label class="issue" for="7">人材確保</label>
@@ -162,7 +275,7 @@
           id="8"
           class="issue-checkbox"
           type="checkbox"
-          value="new_customers"
+          value="8"
           v-model="issues"
         />
         <label class="issue" for="8">新規顧客</label>
@@ -170,7 +283,7 @@
           id="9"
           class="issue-checkbox"
           type="checkbox"
-          value="outflow"
+          value="9"
           v-model="issues"
         />
         <label class="issue" for="9">流失客</label>
@@ -178,7 +291,7 @@
           id="10"
           class="issue-checkbox"
           type="checkbox"
-          value="purchases"
+          value="10"
           v-model="issues"
         />
         <label class="issue" for="10">購入点数</label>
@@ -186,7 +299,7 @@
           id="11"
           class="issue-checkbox"
           type="checkbox"
-          value="repeat_rate"
+          value="11"
           v-model="issues"
         />
         <label class="issue" for="11">リピート率</label>
@@ -194,7 +307,7 @@
           id="12"
           class="issue-checkbox"
           type="checkbox"
-          value="sales"
+          value="12"
           v-model="issues"
         />
         <label class="issue" for="12">売上</label>
@@ -202,19 +315,23 @@
           id="13"
           class="issue-checkbox"
           type="checkbox"
-          value="unit_price"
+          value="13"
           v-model="issues"
         />
         <label class="issue" for="13">商品単価</label>
-        <!-- TODO:v-forでの問題を自動挿入 -->
       </div>
     </div>
+    
+    <Button @click="updateData">編集を保存する</Button>
     
   </section>
 </template>
 <script>
 import Title from "~/components/Title.vue";
 import otaInput from "~/components/otaInput.vue";
+import { getFips } from "crypto";
+import { getFirestore, getDoc, updateDoc, doc } from "@firebase/firestore";
+import { getAuth, onAuthStateChanged, } from "firebase/auth";
 export default {
   name: "profiles",
   props: {
@@ -228,9 +345,94 @@ export default {
     Title,
     otaInput,
   },
+  async mounted() {
+    await this.getUserNum();
+    this.getData();
+  },
   methods:{
-    save(){
-      console.log(this.name);
+    // ログイン中のユーザの連番を取得
+    async getUserNum(){
+      let uid = "8J5DyxH8IgZXOJ97JL2ZMUtFWdz2";   // テスト中(このページにログインして移動できるなら空にするか初期値決める)
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          uid = user.uid;
+        }
+      });
+      const db = getFirestore();
+      const docSnap = await getDoc(doc(db, "uid_to_num", uid));
+      if (docSnap.exists()) {
+        this.userNum = docSnap.data().num;
+      } else {
+        console.log("No such document.");
+      }
+    },
+    // データの取得
+    async getData(){
+      const db = getFirestore();
+      const docSnapProfile = await getDoc(doc(db, "users", this.userNum));
+      if (docSnapProfile.exists()) {
+        const user = docSnapProfile.data();
+        this.message = user.message;
+        this.shop_name = user.shop_name;
+        this.representative = user.representative;
+        this.industry = user.industry;
+        this.address = user.address;
+        this.line_administrator = user.line_administrator;
+        this.line_furigana = user.line_furigana;
+        this.introduction = user.introduction;
+      } else {
+        console.log("No such document.");
+      }
+      const docSnapIssues = await getDoc(doc(db, "ManagementIssues", this.userNum));
+      if (docSnapIssues.exists()) {
+        const issuesData = docSnapIssues.data();
+        if (issuesData.attracting_customers) {this.issues.push("1")};
+        if (issuesData.awareness) {this.issues.push("2")};
+        if (issuesData.branding) {this.issues.push("3")};
+        if (issuesData.employee_training) {this.issues.push("4")};
+        if (issuesData.expansion) {this.issues.push("5")};
+        if (issuesData.frequency) {this.issues.push("6")};
+        if (issuesData.human_resources) {this.issues.push("7")};
+        if (issuesData.new_customers) {this.issues.push("8")};
+        if (issuesData.outflow) {this.issues.push("9")};
+        if (issuesData.purchases) {this.issues.push("10")};
+        if (issuesData.repeat_rate) {this.issues.push("11")};
+        if (issuesData.sales) {this.issues.push("12")};
+        if (issuesData.unit_price) {this.issues.push("13")};
+      } else {
+        console.log("No such document.");
+      }
+    },
+    // 編集の保存
+    async updateData(){
+      const db = getFirestore();
+      await updateDoc(doc(db, "users", this.userNum), {
+        message: this.message,
+        shop_name: this.shop_name,
+        representative: this.representative,
+        industry: this.industry,
+        address: this.address,
+        line_administrator: this.line_administrator,
+        line_furigana: this.line_furigana,
+        introduction: this.introduction,
+      });
+      await updateDoc(doc(db, "ManagementIssues", this.userNum), {
+        attracting_customers: this.issues.includes("1"),
+        awareness: this.issues.includes("2"),
+        branding: this.issues.includes("3"),
+        employee_training: this.issues.includes("4"),
+        expansion: this.issues.includes("5"),
+        frequency: this.issues.includes("6"),
+        human_resources: this.issues.includes("7"),
+        new_customers: this.issues.includes("8"),
+        outflow: this.issues.includes("9"),
+        purchases: this.issues.includes("10"),
+        repeat_rate: this.issues.includes("11"),
+        sales: this.issues.includes("12"),
+        unit_price: this.issues.includes("13"),
+      });
+      alert("編集を保存しました。")
     }
   },
   data() {
@@ -238,20 +440,31 @@ export default {
       shopName: "のりや",
       userName: "田中",
       isInputMode: false,
-      issues: [],
-      message:"",
-      shop_name:"",
-      furigana:"",
-      industry:"",
-      representative:"",
-      address:"",
-      introduction:""
-
+      userNum: "",
+      message: "",
+      shop_name: "",
+      representative: "",
+      industry: "",
+      address: "",
+      line_administrator: "",
+      line_furigana: "",
+      introduction: "",
+      issues: []
     };
   },
 };
 </script>
 <style lang="scss" scoped>
+textarea {
+  resize: vertical;
+  width: 100%;
+  height: 60px;
+}
+input,
+textarea {
+  background-color: #c4c4c4;
+  border-radius: 4px;
+}
 .profiles {
   padding: 0 10%;
   text-align: center;

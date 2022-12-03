@@ -107,7 +107,7 @@ export default {
           await setDoc(doc(db, "uid_to_num", user.uid), {
             num: userNum,
           });
-          // user情報のひな形を作成
+          // usersのひな形を作成
           await setDoc(doc(db, "users", userNum), {
             address: "",
             facebook: "",
@@ -120,6 +120,22 @@ export default {
             representative: "",
             shop_name: "",
             twitter: "",
+          });
+          // ManagementIssuesのひな形を作成
+          await setDoc(doc(db, "ManagementIssues", userNum), {
+            attracting_customers: false,
+            awareness: false,
+            branding: false,
+            employee_training: false,
+            expansion: false,
+            frequency: false,
+            human_resources: false,
+            new_customers: false,
+            outflow: false,
+            purchases: false,
+            repeat_rate: false,
+            sales: false,
+            unit_price: false,
           });
           this.returnTop()
           // ...
