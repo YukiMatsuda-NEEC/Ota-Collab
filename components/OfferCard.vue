@@ -6,8 +6,8 @@
         alt="プロフィールアイコン"
         class="profile-icon"
       />
-      <div class="profile_industry">小売業</div>
-      <div class="profile_store">海苔屋</div>
+      <div class="profile_industry">{{ industry }}</div>
+      <div class="profile_store">{{ store }}</div>
       <p>
         残り<span>{{ day }}</span
         >日
@@ -68,6 +68,8 @@ export default {
   name: "OfferCard",
   data() {
     return {
+      industry: "小売り業",
+      store: "海苔屋",
       day: 4,
     };
   },

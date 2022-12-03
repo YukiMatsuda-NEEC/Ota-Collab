@@ -6,7 +6,7 @@
     </header>
     <section class="header-imgs">
       <img
-        src="~/assets/image/sample-image/画像4.jpg"
+        src="~/assets/image/sample-image/kawashimaHeader.jpg"
         alt="ヘッダーイメージ"
         class="header-img"
       />
@@ -20,7 +20,6 @@
       <!-- テスト中 --------------------------------------------------------------------------- -->
       <p>{{ offers }}</p>
       <!-- --------------------------------------------------------------------------- -->
-
     </section>
     <profiles :isEditing="isEditing" />
   </div>
@@ -61,23 +60,23 @@ header {
 <script>
 import Title from "~/components/Title.vue";
 import profiles from "~/components/profiles.vue";
+
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 export default {
-
   // テスト中 ---------------------------------------------------------------------------
 
-  async asyncData ({ $axios }) {
+  async asyncData({ $axios }) {
     // バックエンドに送る店のID
-    const slug = 'a001'
+    const slug = "a001";
     try {
       // バックエンドからの戻り値をdataに代入
-      const data = await $axios.$get(`/matching/${slug}`)
+      const data = await $axios.$get(`/matching/${slug}`);
       // offersにオファー相手のIDの配列を代入
-      const offers = data.offers
-      return { offers }
+      const offers = data.offers;
+      return { offers };
     } catch (e) {
-      return { offers: e }
+      return { offers: e };
     }
   },
 
@@ -102,9 +101,9 @@ export default {
   },
   methods: {
     async firebase() {
-      // let docRef = doc(getFirestore(), "users", "1");
-      // const docSnap = await getDoc(docRef);
-      // console.log(docSnap.data()); 
+      let docRef = doc(getFirestore(), "users", "1");
+      const docSnap = await getDoc(docRef);
+      console.log(docSnap.data());
       //firebaseテストコード、リロードの度dbを取得してしまうためコメントアウト
     },
     Edit() {

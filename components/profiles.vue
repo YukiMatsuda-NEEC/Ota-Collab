@@ -41,7 +41,27 @@
       <Title> 強み、弱み </Title>
       サンプルサンプルサンプルサンプルサンプルサンプルサンプルサンプル
     </div>
+    <div class="profile">
+      <Title> Qrコード </Title>
+      ここにqrコード表示
+    </div>
+
+    <!-- 興味ある・パス -->
+    <div class="profile">
+      <section>
+        <ota-Button @click="" buttonStyle="interest"> 興味ある </ota-Button>
+        <ota-Button @click="" buttonStyle="pass"> パス </ota-Button>
+      </section>
+    </div>
+
+    <div class="profile">
+      <section>
+        <ota-Button @click="" buttonStyle="offer"> オファー送信 </ota-Button>
+      </section>
+    </div>
   </section>
+
+  <!-- ここから下がinput -->
   <section class="profiles" v-else>
     <div class="profile">
       <Title> コラボ願望 </Title>
@@ -139,11 +159,16 @@
       <Title> 強み、弱み </Title>
       <otaInput :isTextarea="true" />
     </div>
+    <div class="profile">
+      <Title> Line Qrコード </Title>
+      <otaInput type="file" />
+    </div>
   </section>
 </template>
 <script>
 import Title from "~/components/Title.vue";
 import otaInput from "~/components/otaInput.vue";
+
 export default {
   name: "profiles",
   props: {

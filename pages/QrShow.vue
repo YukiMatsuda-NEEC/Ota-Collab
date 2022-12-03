@@ -73,16 +73,28 @@ section {
 
 <script>
 import QrView from "~/components/QrView.vue";
+import { getStorage } from "firebase/storage";
+
 export default {
   name: "",
   data() {
     return {
-      name: "のりや",
-      Qr: "~/assets/image/sample-image/my_qrcode_1665625823793.jpg",
+      name: "田中",
+      Qr: "dfadaf",
     };
   },
-  metheod: {
-    changeMode() {},
+  async asyncData({ $axios }) {
+    // バックエンドに送る店のID
+    const slug = "1";
+    try {
+      // バックエンドからの戻り値をdataに代入
+      const data = await $axios.$get(`/matching/${slug}`);
+      // offersにオファー相手のIDの配列を代入
+      const offers = data.offers;
+      return { offers };
+    } catch (e) {
+      return { offers: e };
+    }
   },
 };
 </script>
