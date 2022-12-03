@@ -1,49 +1,39 @@
 <template>
   <div>
     <header>
-      <p>OOTA collab.</p>
+      <p>OTA collab.</p>
+      <!-- オススメ -->
     </header>
     <section class="mode">
-      <p>オファー</p>
-      <p>オススメ</p>
-      <p>オファー中</p>
+      <button><router-link to="offer">承認待ち</router-link></button>
+      <button><router-link to="recommend">オススメ</router-link></button>
+      <button><router-link to="offerNow">返信待ち</router-link></button>
     </section>
 
-    <section class="offer">
-      <div class="profile">
-        <img
-          src="~/assets/image/sample-image/shop-sample-icon.jpg"
-          alt="プロフィールアイコン"
-          class="profile-icon"
-        />
-        <div class="info">
-          <div class="profile_industry">小売業</div>
-          <div class="profile_store">海苔屋</div>
-        </div>
-
-        <div class="message">
-          <p class="comment">
-            <span>{{ comment }}</span>
-          </p>
-        </div>
-      </div>
-    </section>
+    <recommendCard />
   </div>
 </template>
 <style lang="scss" scoped>
 .mode {
   //オファーオススメオファー中
   text-align: center;
-  height: 79px;
+  height: 50px;
 
   justify-content: space-evenly;
   display: flex;
   background: #acacac;
   border-radius: 0px 0px 13px 13px;
+  button {
+    background-color: rgb(230, 230, 230);
+    border: 1px solid rgb(44, 44, 44);
+    a {
+      text-decoration: none;
+    }
+  }
 }
 
 header {
-  //ootacollab表示
+  //otacollab表示
   text-align: center;
   h2 {
     font-size: 18px;
@@ -93,6 +83,7 @@ header {
 
 <script>
 import OfferCard from "~/components/OfferCard.vue";
+import RecommendCard from "../components/recommendCard.vue";
 export default {
   name: "",
   data() {
@@ -101,8 +92,9 @@ export default {
       userName: "田中",
     };
   },
-  metheod: {
+  methods: {
     changeMode() {},
   },
+  components: { RecommendCard },
 };
 </script>

@@ -73,12 +73,14 @@ section {
 
 <script>
 import QrView from "~/components/QrView.vue";
+import { getStorage } from "firebase/storage";
+
 export default {
   name: "",
   data() {
     return {
-      name: "のりや",
-      Qr: "~/assets/image/sample-image/my_qrcode_1665625823793.jpg",
+      name: "田中",
+      Qr: "dfadaf",
     };
   },
   metheod: {

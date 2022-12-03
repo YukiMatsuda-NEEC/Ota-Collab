@@ -1,7 +1,7 @@
 <template>
   <div>
     <header>
-      <p>OOTA collab.</p>
+      <p>OTA collab.</p>
       <p @click="Edit">Edit</p>
     </header>
     <section class="header-imgs">
