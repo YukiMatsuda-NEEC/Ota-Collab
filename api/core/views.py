@@ -88,7 +88,7 @@ def matching(person: User):                  # 引数personとはマッチング
     
     # ユーザーIDが若い順に経営課題一致度を比較している（「最多フラグ一致度」を調べるため）
     for i in range(0, len(targetUser), 1):
-        currentMatchingParam = int(person.managementIssuesArray) & bin(targetUser[i].managementIssuesArray).count("1")
+        currentMatchingParam = bin(person.managementIssuesArray & targetUser[i].managementIssuesArray).count("1")
 #        print("current: "+str(currentMatchingParam)+", "+str(int(person.managementIssuesArray) & int(targetUser[i].managementIssuesArray)))
         # もしかつてない一致度を持つユーザーが現れたらその一致度を「最多フラグ一致度」とする
         if(currentMatchingParam >= maxMatchingParam):
@@ -97,7 +97,7 @@ def matching(person: User):                  # 引数personとはマッチング
     # 「最多フラグ一致度」を持つユーザーを配列に追加する
     for i in range(0, len(targetUser), 1):
         # もし比較対象のユーザーが「最多フラグ一致度」を持っていたら、offerUser[]にappendする
-        if(int(person.managementIssuesArray) & bin(targetUser[i].managementIssuesArray).count("1") == maxMatchingParam):
+        if(bin(person.managementIssuesArray & targetUser[i].managementIssuesArray).count("1") == maxMatchingParam):
             offerUser.append(User(i))
     return offerUser
 
@@ -110,7 +110,8 @@ def returnMatching(request, slug):
         offerUser = []
         offerUser = matching(person)
         for i in range(len(offerUser)):
-            offerUserID.append(offerUser[i].userID)
+            if((offerUser[i].userID != 0) & (offerUser[i].userID != user)):
+                offerUserID.append(offerUser[i].userID)
         obj = OffersArray(offerUserID)
         offers = OffersSerializer(obj)
         return Response(offers.data)

@@ -67,10 +67,8 @@ export default {
       offers: [],
     };
   },
-  async mounted() {
-    // await this.getUserNum();
-    // this.matching();
-    this.getUserDataTest();
+  mounted() {
+    this.matching();
   },
   methods: {
     change1() {
@@ -82,43 +80,41 @@ export default {
     change3() {
       this.displayType = 3;
     },
-    // ログイン中のユーザの連番を取得
-    async getUserNum() {
-      let uid = "8J5DyxH8IgZXOJ97JL2ZMUtFWdz2"; // テスト中(このページにログインして移動できるなら空にするか初期値決める)
+    // マッチングapiでマッチング相手の連番の配列を取得
+    async matching() {
+      let uid = ""; // テスト中(初期値決める)
       const auth = getAuth();
-      onAuthStateChanged(auth, (user) => {
+      onAuthStateChanged(auth, async (user) => {
         if (user) {
           uid = user.uid;
+          const db = getFirestore();
+          const docSnap = await getDoc(doc(db, "uid_to_num", uid));
+          if (docSnap.exists()) {
+            this.userNum = docSnap.data().num;
+          } else {
+            console.log("No such document.");
+          }
+          try {
+            const data = await this.$axios.$get(`/matching/${this.userNum}`);
+            console.log(data.offers);
+            data.offers.forEach(async (offerNum) => {
+              const offerData = await this.getUserData(String(offerNum));
+              this.offers.push(offerData);
+            });
+          } catch (e) {
+            console.error(e);
+          }
         }
       });
-      const db = getFirestore();
-      const docSnap = await getDoc(doc(db, "uid_to_num", uid));
-      if (docSnap.exists()) {
-        this.userNum = docSnap.data().num;
-      } else {
-        console.log("No such document.");
-      }
-    },
-    // マッチングapiでマッチング相手の連番の配列（ユーザ情報の配列にするか？）を取得
-    async matching() {
-      try {
-        const data = await this.$axios.$get(`/matching/${this.userNum}`);
-        data.offers.forEach(async (offerNum) => {
-          const offerData = await this.getUserData(offerNum);
-          this.offers.push(offerData);
-        });
-        this.offers = data.offers;
-      } catch (e) {
-        console.error(e);
-      }
     },
     // 連番のユーザ情報を取得
     async getUserData(offerNum) {
+      let offerReturn = {};
       const db = getFirestore();
       const docSnap = await getDoc(doc(db, "users", offerNum));
       if (docSnap.exists()) {
         const data = docSnap.data();
-        const offerReturn = {
+        offerReturn = {
           address: data.address,
           industry: data.industry,
           introduction: data.introduction,
@@ -131,15 +127,8 @@ export default {
         return offerReturn;
       } else {
         console.log("No such document.");
-        return offerData;
+        return offerReturn;
       }
-    },
-    async getUserDataTest() {
-      const dataOffers = ["1", "6"];
-      dataOffers.forEach(async (offerNum) => {
-        const offerData = await this.getUserData(offerNum);
-        this.offers.push(offerData);
-      });
     },
   },
 };

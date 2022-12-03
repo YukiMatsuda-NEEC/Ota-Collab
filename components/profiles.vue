@@ -368,64 +368,59 @@ export default {
     Title,
     otaInput,
   },
-  async mounted() {
-    await this.getUserNum();
+  mounted() {
     this.getData();
   },
   methods:{
-    // ログイン中のユーザの連番を取得
-    async getUserNum(){
-      let uid = "8J5DyxH8IgZXOJ97JL2ZMUtFWdz2";   // テスト中(このページにログインして移動できるなら空にするか初期値決める)
+    // データの取得
+    getData(){
+      let uid = "";   // テスト中(初期値決める)
       const auth = getAuth();
-      onAuthStateChanged(auth, (user) => {
+      onAuthStateChanged(auth, async (user) => {
         if (user) {
-          uid = user.uid;
+          uid = user.uid;  // ユーザのuid取得
+          const db = getFirestore();
+          const docSnap = await getDoc(doc(db, "uid_to_num", uid));
+          if (docSnap.exists()) {
+            this.userNum = docSnap.data().num;  // ユーザの連番取得
+          } else {
+            console.log("No such document.");
+          }
+          const docSnapProfile = await getDoc(doc(db, "users", this.userNum));
+          if (docSnapProfile.exists()) {
+            const user = docSnapProfile.data();  // ユーザ情報の取得
+            this.message = user.message;
+            this.shop_name = user.shop_name;
+            this.representative = user.representative;
+            this.industry = user.industry;
+            this.address = user.address;
+            this.line_administrator = user.line_administrator;
+            this.line_furigana = user.line_furigana;
+            this.introduction = user.introduction;
+          } else {
+            console.log("No such document.");
+          }
+          const docSnapIssues = await getDoc(doc(db, "ManagementIssues", this.userNum));
+          if (docSnapIssues.exists()) {
+            const issuesData = docSnapIssues.data();  // ユーザの経営課題の取得
+            if (issuesData.attracting_customers) {this.issues.push("1")};
+            if (issuesData.awareness) {this.issues.push("2")};
+            if (issuesData.branding) {this.issues.push("3")};
+            if (issuesData.employee_training) {this.issues.push("4")};
+            if (issuesData.expansion) {this.issues.push("5")};
+            if (issuesData.frequency) {this.issues.push("6")};
+            if (issuesData.human_resources) {this.issues.push("7")};
+            if (issuesData.new_customers) {this.issues.push("8")};
+            if (issuesData.outflow) {this.issues.push("9")};
+            if (issuesData.purchases) {this.issues.push("10")};
+            if (issuesData.repeat_rate) {this.issues.push("11")};
+            if (issuesData.sales) {this.issues.push("12")};
+            if (issuesData.unit_price) {this.issues.push("13")};
+          } else {
+            console.log("No such document.");
+          }
         }
       });
-      const db = getFirestore();
-      const docSnap = await getDoc(doc(db, "uid_to_num", uid));
-      if (docSnap.exists()) {
-        this.userNum = docSnap.data().num;
-      } else {
-        console.log("No such document.");
-      }
-    },
-    // データの取得
-    async getData(){
-      const db = getFirestore();
-      const docSnapProfile = await getDoc(doc(db, "users", this.userNum));
-      if (docSnapProfile.exists()) {
-        const user = docSnapProfile.data();
-        this.message = user.message;
-        this.shop_name = user.shop_name;
-        this.representative = user.representative;
-        this.industry = user.industry;
-        this.address = user.address;
-        this.line_administrator = user.line_administrator;
-        this.line_furigana = user.line_furigana;
-        this.introduction = user.introduction;
-      } else {
-        console.log("No such document.");
-      }
-      const docSnapIssues = await getDoc(doc(db, "ManagementIssues", this.userNum));
-      if (docSnapIssues.exists()) {
-        const issuesData = docSnapIssues.data();
-        if (issuesData.attracting_customers) {this.issues.push("1")};
-        if (issuesData.awareness) {this.issues.push("2")};
-        if (issuesData.branding) {this.issues.push("3")};
-        if (issuesData.employee_training) {this.issues.push("4")};
-        if (issuesData.expansion) {this.issues.push("5")};
-        if (issuesData.frequency) {this.issues.push("6")};
-        if (issuesData.human_resources) {this.issues.push("7")};
-        if (issuesData.new_customers) {this.issues.push("8")};
-        if (issuesData.outflow) {this.issues.push("9")};
-        if (issuesData.purchases) {this.issues.push("10")};
-        if (issuesData.repeat_rate) {this.issues.push("11")};
-        if (issuesData.sales) {this.issues.push("12")};
-        if (issuesData.unit_price) {this.issues.push("13")};
-      } else {
-        console.log("No such document.");
-      }
     },
     // 編集の保存
     async updateData(){
@@ -456,6 +451,7 @@ export default {
         unit_price: this.issues.includes("13"),
       });
       alert("編集を保存しました。")
+      this.isEditing = !this.isEditing;
     }
   },
   data() {
