@@ -3,18 +3,19 @@
     <div class="profile">
       <img src="~/assets/image/sample-image/shop-sample-icon.jpg" alt="プロフィールアイコン" class="profile-icon" />
       <div class="info">
-        <div class="profile_industry">{{ offer["industry"] }}</div>
-        <div class="profile_store">{{ offer["shop_name"] }}</div>
+        <div class="profile_industry">{{ recommend["industry"] }}</div>
+        <div class="profile_store">{{ recommend["shop_name"] }}</div>
       </div>
 
       <div class="message">
         <p>
-          <span>{{ offer["message"] }}</span>
+          <span>{{ recommend["message"] }}</span>
         </p>
       </div>
     </div>
   </section>
 </template>
+
 <style lang="scss" scoped>
 .offer {
   .profile {
@@ -43,7 +44,7 @@
     div.profile_store {
       text-align: right;
       margin-right: 20px;
-      font-size: 30px;
+      font-size: 25px;
     }
   }
 
@@ -75,7 +76,7 @@
 export default {
   name: "OfferCard",
   props: {
-    offer: {
+    recommend: {
       type: Object,
       required: false,
       default: false,

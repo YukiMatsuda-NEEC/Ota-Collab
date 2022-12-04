@@ -24,11 +24,11 @@
           <td class="profile-value">{{ address }}</td>
         </tr>
         <tr>
-          <td class="profile-title">ライン管理者</td>
+          <td class="profile-title">LINE管理者</td>
           <td class="profile-value">{{ line_administrator }}</td>
         </tr>
         <tr>
-          <td class="profile-title">管理者フリガナ</td>
+          <td class="profile-title">フリガナ</td>
           <td class="profile-value">{{ line_furigana }}</td>
         </tr>
       </table>
@@ -160,24 +160,15 @@
       </div>
     </div>
     <div class="profile">
-      <Title> Qrコード </Title>
-      ここにqrコード表示
-    </div>
-
-    <!-- 興味ある・パス -->
-    <div class="profile">
-      <section>
-        <ota-Button @click="" buttonStyle="interest"> 興味ある </ota-Button>
-        <ota-Button @click="" buttonStyle="pass"> パス </ota-Button>
-      </section>
-    </div>
-
-    <div class="profile">
-      <section>
-        <ota-Button @click="" buttonStyle="offer"> オファー送信 </ota-Button>
-      </section>
+      <Title> LINE QRコード </Title>
+      <img
+        src="~/assets/image/sample-image/my_qrcode_1665625823793.jpg"
+        height="155px"
+        weight="155px"
+      />
     </div>
   </section>
+  
   <section class="profiles" v-else>
     <div class="profile">
       <Title> コラボ願望 </Title>
@@ -191,36 +182,42 @@
           <td class="profile-title">店舗名</td>
           <td class="profile-value">
             <otaInput v-model="shop_name"/>
+            <input v-model="shop_name"/>
           </td>
         </tr>
         <tr>
           <td class="profile-title">代表者名</td>
           <td class="profile-value">
             <otaInput v-model="representative"/>
+            <input v-model="representative"/>
           </td>
         </tr>
         <tr>
           <td class="profile-title">業種</td>
           <td class="profile-value">
             <otaInput v-model="industry"/>
+            <input v-model="industry"/>
           </td>
         </tr>
         <tr>
           <td class="profile-title">店舗住所</td>
           <td class="profile-value">
             <otaInput v-model="address"/>
+            <input v-model="address"/>
           </td>
         </tr>
         <tr>
-          <td class="profile-title">ライン管理者</td>
+          <td class="profile-title">LINE管理者</td>
           <td class="profile-value">
             <otaInput v-model="line_administrator"/>
+            <input v-model="line_administrator"/>
           </td>
         </tr>
         <tr>
-          <td class="profile-title">管理者フリガナ</td>
+          <td class="profile-title">フリガナ</td>
           <td class="profile-value">
             <otaInput v-model="line_furigana"/>
+            <input v-model="line_furigana"/>
           </td>
         </tr>
       </table>
@@ -342,10 +339,20 @@
     <div class="profile">
       <Title> Line Qrコード </Title>
       <otaInput type="file" />
+      <section>
+        <ota-Button @click="" buttonStyle="guideline">
+          ガイドライン
+        </ota-Button>
+      </section>
     </div>
-    
-    <Button @click="updateData">編集を保存する</Button>
-    
+
+    <div class="profile">
+      <section>
+        <ota-Button @click="updateData" buttonStyle="save"> 保存 </ota-Button>
+        <ota-Button @click="getData" buttonStyle="cancel"> キャンセル </ota-Button>
+      </section>
+    </div>
+
   </section>
 </template>
 <script>
@@ -402,6 +409,7 @@ export default {
           }
           const docSnapIssues = await getDoc(doc(db, "ManagementIssues", this.userNum));
           if (docSnapIssues.exists()) {
+            this.issues = [];  // ユーザの経営課題の初期化
             const issuesData = docSnapIssues.data();  // ユーザの経営課題の取得
             if (issuesData.attracting_customers) {this.issues.push("1")};
             if (issuesData.awareness) {this.issues.push("2")};
@@ -450,15 +458,20 @@ export default {
         sales: this.issues.includes("12"),
         unit_price: this.issues.includes("13"),
       });
-      alert("編集を保存しました。")
+      alert("編集を保存しました。");
       this.isEditing = !this.isEditing;
-    }
+    },
+    // QRコード、ボタンの表示切り替え
+    toggle: function () {
+      this.show = true;
+    },
   },
   data() {
     return {
       shopName: "のりや",
       userName: "田中",
       isInputMode: false,
+      show: false,
       userNum: "",
       message: "",
       shop_name: "",
@@ -474,6 +487,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+input {
+  width: 100%;
+  height: 29px;
+  box-sizing: border-box;
+  border: 0;
+  font-weight: bold;
+}
 textarea {
   resize: vertical;
   width: 100%;

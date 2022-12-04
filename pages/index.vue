@@ -2,7 +2,7 @@
   <div>
     <header>
       <p>OTA collab.</p>
-      <p @click="Edit">Edit</p>
+      <ota-Button @click="Edit" buttonStyle="cancel">Edit</ota-Button>
     </header>
     <section class="header-imgs">
       <img
@@ -78,9 +78,8 @@ export default {
       userName: "田中",
       isInputMode: false,
       isEditing: false,
-      profileData: {},
-      offers: [],
-      lastNum: "",
+      // offers: [],
+      // lastNum: "",
       userNum: "",
     };
   },
