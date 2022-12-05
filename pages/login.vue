@@ -9,7 +9,7 @@
       <ota-button @click="isSingup = true" buttonStyle="signUp">新規登録</ota-button>
     </section>
     <section class="Login-inputs" v-if="isLogin || isSingup">
-      <ota-input placeholder="メールアドレス・ID" v-model="email" inputStyle="LoginInput"></ota-input>
+      <ota-input placeholder="メールアドレス" v-model="email" inputStyle="LoginInput"></ota-input>
       <ota-input placeholder="パスワード" v-model="password" inputStyle="LoginInput"></ota-input>
       <ota-button v-if="isLogin" @click="onLoginButton" buttonStyle="login">ログイン</ota-button>
       <ota-button v-else @click="onSingupButton" buttonStyle="signUp">新規登録</ota-button>

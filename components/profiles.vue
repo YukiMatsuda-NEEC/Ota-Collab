@@ -123,7 +123,8 @@
     </div>
     <div class="profile">
       <Title> お店紹介 </Title>
-      <otaInput v-model="introduction" :isTextarea="true" />
+      <!-- <otaInput v-model="introduction" :isTextarea="true" /> -->
+      <textarea v-model="introduction"></textarea>
     </div>
     <div class="profile">
       <Title> 経営課題 </Title>
@@ -184,6 +185,21 @@ import { getAuth, onAuthStateChanged, } from "firebase/auth";
 
 export default {
   name: "profiles",
+  data() {
+    return {
+      show: false,
+      userNum: "",
+      message: "",
+      shop_name: "",
+      representative: "",
+      industry: "",
+      address: "",
+      line_administrator: "",
+      line_furigana: "",
+      introduction: "",
+      issues: []
+    };
+  },
   props: {
     isEditing: {
       type: Boolean,
@@ -281,21 +297,6 @@ export default {
       alert("編集を保存しました。");
       this.isEditing = !this.isEditing;
     },
-  },
-  data() {
-    return {
-      show: false,
-      userNum: "",
-      message: "",
-      shop_name: "",
-      representative: "",
-      industry: "",
-      address: "",
-      line_administrator: "",
-      line_furigana: "",
-      introduction: "",
-      issues: []
-    };
   },
 };
 </script>
