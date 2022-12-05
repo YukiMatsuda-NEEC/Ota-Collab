@@ -1,25 +1,25 @@
 <template>
   <div>
     <header>
-      <p>OOTA collab.</p>
-      <p @click="Edit">Edit</p>
+      <p>OTA collab.</p>
+      <ota-Button @click="Edit" buttonStyle="cancel">Edit</ota-Button>
     </header>
     <section class="header-imgs">
-      <!-- <img
-        src="~/assets/image/sample-image/画像4.jpg"
+      <img
+        src="~/assets/image/sample-image/kawashimaHeader.jpg"
         alt="ヘッダーイメージ"
         class="header-img"
-      /> -->
+      />
       <img
         src="~/assets/image/sample-image/kawashimaIcon.jpg"
         alt="ヘッダーアイコン"
         class="header-icon"
       />
-      <p class="shop-name">{{ shopName }}</p>
+      <p class="shop-name">{{ shop_name }}</p>
 
       <!-- テスト中 --------------------------------------------------------------------------- -->
-      <p>{{ offers }}</p>
-      <p>{{ lastNum }}</p>
+      <!-- <p>{{ offers }}</p>
+      <p>{{ lastNum }}</p> -->
       <!-- --------------------------------------------------------------------------- -->
 
     </section>
@@ -36,6 +36,7 @@ header {
 }
 .header-imgs {
   text-align: center;
+  height: 240px;
 
   .header-img {
     height: 130px;
@@ -73,71 +74,79 @@ export default {
   },
   data() {
     return {
-      shopName: "パン屋",
+      shop_name: "",
       userName: "田中",
       isInputMode: false,
       isEditing: false,
-      profileData: {},
-      offers: [],
-      lastNum: "",
-      uid: "",
+      // offers: [],
+      // lastNum: "",
+      userNum: "",
     };
   },
   created() {
-    this.firebase();
+    // this.firebase();
     // this.matching();
     // this.getLastNum();
   },
   mounted() {
-    this.matching();  // createdだと二度実行される場合があるため
+    this.getShopName();
+    // this.matching();  // createdだと二度実行される場合があるため
   },
   methods: {
-    async firebase() {
+    // async firebase() {
       // let docRef = doc(getFirestore(), "users", "1");
       // const docSnap = await getDoc(docRef);
       // console.log(docSnap.data()); 
       //firebaseテストコード、リロードの度dbを取得してしまうためコメントアウト
-    },
+    // },
     Edit() {
       this.isEditing = !this.isEditing;
     },
-    async matching () {
-      // ログイン中のユーザのuid
+    // 店舗名の取得
+    async getShopName(){
+      let uid = "";   // テスト中(初期値決める)
       const auth = getAuth();
-      onAuthStateChanged(auth, (user) => {
+      onAuthStateChanged(auth, async (user) => {
         if (user) {
-          this.uid = user.uid;
+          uid = user.uid;  // ユーザのuid取得
+          const db = getFirestore();
+          const docSnap = await getDoc(doc(db, "uid_to_num", uid));
+          if (docSnap.exists()) {
+            this.userNum = docSnap.data().num;  // ユーザの連番取得
+          } else {
+            console.log("No such document.");
+          }
+          const docSnapName = await getDoc(doc(db, "users", this.userNum));
+          if (docSnapName.exists()) {
+            const user = docSnapName.data();
+            this.shop_name = user.shop_name;  // 店舗名の取得
+          } else {
+            console.log("No such document.");
+          }
         }
       });
-      this.uid = "testUserdesu";       // テスト中(このページにログインして移動できるなら消す)
-      // ログイン中のユーザの連番
-      const db = getFirestore();
-      const docRef = doc(db, "uid_to_num", this.uid);
-      const docSnap = await getDoc(docRef);
-      let userNum = "";
-      if (docSnap.exists()) {
-        userNum = docSnap.data().num;
-      } else {
-        console.log("No such document.");
-      }
-      // マッチングapiでマッチング相手の連番の配列を取得
-      try {
-        const data = await this.$axios.$get(`/matching/${userNum}`);
-        this.offers = data.offers;
-      } catch (e) {
-        console.error(e);
-      }
     },
-    async getLastNum () {
-      try {
-        // usersの最後の連番を取得
-        const data = await this.$axios.$get('/getLastNum');
-        console.log(data,"data");
-        this.lastNum = data.lastNum;
-      } catch (e) {
-        console.error(e);
-      }
-    }, 
+    // ▽マッチング画面に移動済み▽
+    // マッチングapiでマッチング相手の連番の配列（ユーザ情報の配列にするか？）を取得
+    // async matching () {
+    //   try {
+    //     const data = await this.$axios.$get(`/matching/${this.userNum}`);
+    //     this.offers = data.offers;
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // },
+    // ▽新規登録画面に移動済み▽
+    // async getLastNum () {
+    //   try {
+    //     // usersの最後の連番を取得
+    //     const data = await this.$axios.$get('/getLastNum');
+    //     console.log(data,"data");
+    //     this.lastNum = data.lastNum;
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // }, 
   },
 };
 </script>

@@ -1,5 +1,11 @@
 <template>
-  <textarea v-if="isTextarea"></textarea>
+  <textarea
+    v-bind:value="value"
+    v-on:input="$emit('input', $event.target.value)"
+    :placeholder="placeholder"
+    v-if="isTextarea"
+  >
+  </textarea>
   <input
     v-bind:value="value"
     v-on:input="$emit('input', $event.target.value)"

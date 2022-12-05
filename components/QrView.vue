@@ -1,3 +1,11 @@
+
+<!-- 
+
+このファイルは使用しない予定
+
+ -->
+
+
 <template>
   <section class="offer">
     <div class="profile">

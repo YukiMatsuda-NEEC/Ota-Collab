@@ -6,8 +6,8 @@
         alt="プロフィールアイコン"
         class="profile-icon"
       />
-      <div class="profile_industry">小売業</div>
-      <div class="profile_store">海苔屋</div>
+      <div class="profile_industry">{{ offerReceived["industry"] }}</div>
+      <div class="profile_store">{{ offerReceived["shop_name"] }}</div>
       <p>
         残り<span>{{ day }}</span
         >日
@@ -15,6 +15,7 @@
     </div>
   </section>
 </template>
+
 <style lang="scss" scoped>
 h2 {
   color: black;
@@ -58,7 +59,7 @@ span {
   div.profile_store {
     text-align: right;
     margin-right: 20px;
-    font-size: 30px;
+    font-size: 25px;
   }
 }
 </style>
@@ -66,8 +67,17 @@ span {
 <script>
 export default {
   name: "OfferCard",
+  props: {
+    offerReceived: {
+      type: Object,
+      required: false,
+      default: false,
+    },
+  },
   data() {
     return {
+      industry: "小売り業",
+      store: "海苔屋",
       day: 4,
     };
   },
