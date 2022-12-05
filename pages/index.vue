@@ -2,6 +2,7 @@
   <div>
     <header>
       <p>OTA collab.</p>
+      <router-link to="/offer">オファー画面へ</router-link>
       <ota-Button @click="Edit" buttonStyle="cancel">Edit</ota-Button>
     </header>
     <section class="header-imgs">

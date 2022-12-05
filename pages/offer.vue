@@ -2,6 +2,9 @@
   <div>
     <header>
       <p>OTA collab.</p>
+      <p>
+        <router-link to="/">プロフィール画面へ</router-link>
+      </p>
     </header>
     <section class="mode">
       <button @click="change1" v-if="(displayType !== 1)">オファー箱</button>
@@ -202,7 +205,7 @@ export default {
     openRecommendProfile(userNum) {
       this.$router.push({ name: 'offerProfile', params: { userNum: userNum, displayType: 2 } });
     },
-    openSubmittedProfile(userNum) {
+    openSubmittedProfile(userNum, offerID) {
       this.$router.push({ name: 'offerProfile', params: { userNum: userNum, offerID: offerID, displayType: 3 } });
     },
   },
