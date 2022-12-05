@@ -2,7 +2,6 @@
   <div>
     <header>
       <p>OTA collab.</p>
-      <!-- 承認待ち -->
     </header>
     <section class="mode">
       <button @click="change1" v-if="(displayType !== 1)">オファー箱</button>
@@ -21,7 +20,7 @@
           <OfferCard :offerReceived="offerReceived" />
         </div>
       </div>
-    </div>  
+    </div>
 
     <div v-if="(displayType == 2)">
       <h3 v-if="checkWaitData[1]" class="connecting">通信中...</h3>
@@ -36,7 +35,7 @@
       <h3 v-if="checkWaitData[2]" class="connecting">通信中...</h3>
       <h3 v-if="(!checkWaitData[2] & (offersSubmitted.length == 0))" class="connecting">返信を待ちましょう</h3>
       <div v-for="offerSubmitted in offersSubmitted">
-        <div @click="openSubmittedProfile(offerSubmitted.userNum, offerReceived.offerID)">
+        <div @click="openSubmittedProfile(offerSubmitted.userNum, offerSubmitted.offerID)">
           <replyWait :offerSubmitted="offerSubmitted" />
         </div>
       </div>
@@ -44,39 +43,6 @@
 
   </div>
 </template>
-<style lang="scss" scoped>
-.connecting {
-  text-align: center;
-  margin-top: 3em;
-}
-.mode {
-  text-align: center;
-  height: 50px;
-
-  justify-content: space-evenly;
-  display: flex;
-  background: #acacac;
-  border-radius: 0px 0px 13px 13px;
-  // button {
-  //   background-color: rgb(230, 230, 230);
-  //   border: 1px solid rgb(44, 44, 44);
-  //   a {
-  //     text-decoration: none;
-  //   }
-  // }
-}
-section button {
-  display: inline-block;
-  font-size: 14px;
-}
-header {
-  text-align: center;
-  h2 {
-    font-size: 18px;
-    margin: 9px, 0;
-  }
-}
-</style>
 
 <script>
 import OfferCard from "~/components/OfferCard.vue";
@@ -86,7 +52,7 @@ import { getFirestore, doc, getDoc, getDocs, query, collection, where } from "fi
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default {
-  name: "",
+  name: "OfferPage",
   components: {
     OfferCard,
     recommendCard,
@@ -94,8 +60,6 @@ export default {
   },
   data() {
     return {
-      day: 26,
-      userName: "田中",
       checkWaitData: [true, true, true],
       displayType: 1,
       userNum: "",
@@ -121,13 +85,13 @@ export default {
       this.displayType = 3;
     },
     // 表示するタブの確認
-    checkDisplayType(){
-      if(typeof this.$route.params.displayType != "undefined"){
+    checkDisplayType() {
+      if (typeof this.$route.params.displayType != "undefined") {
         this.displayType = this.$route.params.displayType;
       }
     },
     // 受信オファーの取得
-    async getOffersReceived(){
+    async getOffersReceived() {
       let uid = ""; // テスト中(初期値決める)
       const auth = getAuth();
       onAuthStateChanged(auth, async (user) => {
@@ -143,10 +107,10 @@ export default {
           const q = query(collection(db, "offers"), where("to", "==", this.userNum));
           const querySnapshot = await getDocs(q);
           querySnapshot.forEach(async (doc) => {
-            if(!doc.data().is_rejected) {
-              console.log("受信："+doc.data().from);  //////////////////////
+            if (!doc.data().is_rejected) {
+              console.log("受信：" + doc.data().from);  //////////////////////
               const offerData = await this.getUserData(doc.data().from);
-              offerData["offerID"] = doc.id;
+              offerData["offerID"] = doc.id;  // オファーIDを配列に入れる
               this.offersReceived.push(offerData);
             };
           });
@@ -170,7 +134,7 @@ export default {
           }
           try {
             const data = await this.$axios.$get(`/matching/${this.userNum}`);
-            console.log("おすすめ："+data.offers);  /////////////////////
+            console.log("おすすめ：" + data.offers);  /////////////////////
             data.offers.forEach(async (offerNum) => {
               const offerData = await this.getUserData(String(offerNum));
               this.recommends.push(offerData);
@@ -183,7 +147,7 @@ export default {
       });
     },
     // 送信済みオファーの取得
-    async getOffersSubmitted(){
+    async getOffersSubmitted() {
       let uid = ""; // テスト中(初期値決める)
       const auth = getAuth();
       onAuthStateChanged(auth, async (user) => {
@@ -199,9 +163,9 @@ export default {
           const q = query(collection(db, "offers"), where("from", "==", this.userNum));
           const querySnapshot = await getDocs(q);
           querySnapshot.forEach(async (doc) => {
-            console.log("送信済み："+doc.data().to);  //////////////////////
+            console.log("送信済み：" + doc.data().to);  //////////////////////
             const offerData = await this.getUserData(doc.data().to);
-            offerData["offerID"] = doc.id;
+            offerData["offerID"] = doc.id;  // オファーIDを配列に入れる
             this.offersSubmitted.push(offerData);
           });
           this.checkWaitData[2] = false;
@@ -232,15 +196,53 @@ export default {
         return offerReturn;
       }
     },
-    openReceivedProfile(userNum, offerID){
-      this.$router.push({ name: 'offerProfile', params: { userNum: userNum, offerID: offerID, displayType: 1} });
+    openReceivedProfile(userNum, offerID) {
+      this.$router.push({ name: 'offerProfile', params: { userNum: userNum, offerID: offerID, displayType: 1 } });
     },
-    openRecommendProfile(userNum){
-      this.$router.push({ name: 'offerProfile', params: { userNum: userNum, displayType: 2} });
+    openRecommendProfile(userNum) {
+      this.$router.push({ name: 'offerProfile', params: { userNum: userNum, displayType: 2 } });
     },
-    openSubmittedProfile(userNum){
-      this.$router.push({ name: 'offerProfile', params: { userNum: userNum, offerID: offerID, displayType: 3} });
+    openSubmittedProfile(userNum) {
+      this.$router.push({ name: 'offerProfile', params: { userNum: userNum, offerID: offerID, displayType: 3 } });
     },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.connecting {
+  text-align: center;
+  margin-top: 3em;
+}
+
+.mode {
+  text-align: center;
+  height: 50px;
+
+  justify-content: space-evenly;
+  display: flex;
+  background: #acacac;
+  border-radius: 0px 0px 13px 13px;
+  // button {
+  //   background-color: rgb(230, 230, 230);
+  //   border: 1px solid rgb(44, 44, 44);
+  //   a {
+  //     text-decoration: none;
+  //   }
+  // }
+}
+
+section button {
+  display: inline-block;
+  font-size: 14px;
+}
+
+header {
+  text-align: center;
+
+  h2 {
+    font-size: 18px;
+    margin: 9px, 0;
+  }
+}
+</style>

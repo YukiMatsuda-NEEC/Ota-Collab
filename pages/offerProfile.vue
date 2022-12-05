@@ -85,16 +85,16 @@
 
       <!-- オファー箱 -->
       <section v-if="($route.params.displayType == 1)" v-show="!show" class="profile">
-        <ota-Button @click="interestOffer" buttonStyle="interest"> 興味ある </ota-Button>
-        <ota-Button @click="passOffer" buttonStyle="pass"> パス </ota-Button>
+        <ota-button @click="interestOffer" buttonStyle="interest"> 興味ある </ota-button>
+        <ota-button @click="passOffer" buttonStyle="pass"> パス </ota-button>
       </section>
       <!-- オススメ -->
       <section v-if="($route.params.displayType == 2)" class="profile">
-        <ota-Button @click="submitOffer" buttonStyle="offer"> オファー送信 </ota-Button>
+        <ota-button @click="submitOffer" buttonStyle="offer"> オファー送信 </ota-button>
       </section>
       <!-- 共通 -->
       <section class="profile">
-        <ota-Button @click="returnBeforePage" buttonStyle="return">一覧に戻る</ota-Button>
+        <ota-button @click="returnBeforePage" buttonStyle="return">一覧に戻る</ota-button>
       </section>
 
     </section>
@@ -104,18 +104,18 @@
 
 <script>
 import Title from "~/components/Title.vue";
+import otaButton from "~/components/otaButton.vue";
 import { getFirestore, doc, collection, getDoc, addDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default {
-  name: "IndexPage",
+  name: "OfferProfilePage",
   components: {
     Title,
+    otaButton
   },
   data() {
     return {
-      userName: "田中",
-      isInputMode: false,
       show: false,
       userNum: "",
       message: "",

@@ -9,17 +9,6 @@
   </div>
 </template>
 
-<style scoped>
-p {
-  color: black;
-  font-size: 12px;
-  font-weight: 700;
-}
-.underline {
-  text-decoration: underline;
-}
-</style>
-
 <script>
 export default {
   name: "Title",
@@ -32,3 +21,14 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+p {
+  color: black;
+  font-size: 12px;
+  font-weight: 700;
+}
+.underline {
+  text-decoration: underline;
+}
+</style>

@@ -1,54 +1,22 @@
 <template>
   <div>
     <section v-if="true">
-      <img
-        class="icon"
-        :style="isLogin || isSingup ? 'margin-top: 0' : ''"
-        src="~/assets/image/otaCollabIcons/otaIcon.png"
-        alt=""
-      />
+      <img class="icon" :style="isLogin || isSingup ? 'margin-top: 0' : ''"
+        src="~/assets/image/otaCollabIcons/otaIcon.png" alt="" />
     </section>
     <section v-if="!isLogin && !isSingup">
-      <ota-button @click="isLogin = true" buttonStyle="login"
-        >ログイン</ota-button
-      >
-      <ota-button @click="isSingup = true" buttonStyle="signUp"
-        >新規登録</ota-button
-      >
+      <ota-button @click="isLogin = true" buttonStyle="login">ログイン</ota-button>
+      <ota-button @click="isSingup = true" buttonStyle="signUp">新規登録</ota-button>
     </section>
     <section class="Login-inputs" v-if="isLogin || isSingup">
-      <ota-input
-        placeholder="メールアドレス・ID"
-        v-model="email"
-        inputStyle="LoginInput"
-      ></ota-input>
-      <ota-input
-        placeholder="パスワード"
-        v-model="password"
-        inputStyle="LoginInput"
-      ></ota-input>
-      <ota-button v-if="isLogin" @click="onLoginButton" buttonStyle="login"
-        >ログイン</ota-button
-      >
-      <ota-button v-else @click="onSingupButton" buttonStyle="signUp"
-        >新規登録</ota-button
-      >
+      <ota-input placeholder="メールアドレス・ID" v-model="email" inputStyle="LoginInput"></ota-input>
+      <ota-input placeholder="パスワード" v-model="password" inputStyle="LoginInput"></ota-input>
+      <ota-button v-if="isLogin" @click="onLoginButton" buttonStyle="login">ログイン</ota-button>
+      <ota-button v-else @click="onSingupButton" buttonStyle="signUp">新規登録</ota-button>
     </section>
   </div>
 </template>
-<style lang="scss" scoped>
-.Login-inputs {
-  padding: 0 54px;
-}
-section {
-  text-align: center;
-}
-.icon {
-  margin-top: 107px;
-  height: 175px;
-  width: 175px;
-}
-</style>
+
 <script>
 import otaButton from "~/components/otaButton.vue";
 import otaInput from "~/components/otaInput.vue";
@@ -74,8 +42,8 @@ export default {
     otaInput,
   },
   methods: {
-    returnTop(){
-        this.$router.push('/')
+    returnTop() {
+      this.$router.push('/')
     },
     onLoginButton() {
       console.log(process.env.API_KEY);
@@ -150,3 +118,19 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.Login-inputs {
+  padding: 0 54px;
+}
+
+section {
+  text-align: center;
+}
+
+.icon {
+  margin-top: 107px;
+  height: 175px;
+  width: 175px;
+}
+</style>

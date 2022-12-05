@@ -40,139 +40,44 @@
     <div class="profile">
       <Title> 経営課題 </Title>
       <div class="profile-issues">
-        <input
-          id="1"
-          class="issue-checkbox"
-          type="checkbox"
-          value="1"
-          v-model="issues"
-          disabled
-        />
+        <input id="1" class="issue-checkbox" type="checkbox" value="1" v-model="issues" disabled />
         <label class="issue" for="1">集客</label>
-        <input
-          id="2"
-          class="issue-checkbox"
-          type="checkbox"
-          value="2"
-          v-model="issues"
-          disabled
-        />
+        <input id="2" class="issue-checkbox" type="checkbox" value="2" v-model="issues" disabled />
         <label class="issue" for="2">認知度</label>
-        <input
-          id="3"
-          class="issue-checkbox"
-          type="checkbox"
-          value="3"
-          v-model="issues"
-          disabled
-        />
+        <input id="3" class="issue-checkbox" type="checkbox" value="3" v-model="issues" disabled />
         <label class="issue" for="3">ブランディング</label>
-        <input
-          id="4"
-          class="issue-checkbox"
-          type="checkbox"
-          value="4"
-          v-model="issues"
-          disabled
-        />
+        <input id="4" class="issue-checkbox" type="checkbox" value="4" v-model="issues" disabled />
         <label class="issue" for="4">社員教育</label>
-        <input
-          id="5"
-          class="issue-checkbox"
-          type="checkbox"
-          value="5"
-          v-model="issues"
-          disabled
-        />
+        <input id="5" class="issue-checkbox" type="checkbox" value="5" v-model="issues" disabled />
         <label class="issue" for="5">販路拡大</label>
-        <input
-          id="6"
-          class="issue-checkbox"
-          type="checkbox"
-          value="6"
-          v-model="issues"
-          disabled
-        />
+        <input id="6" class="issue-checkbox" type="checkbox" value="6" v-model="issues" disabled />
         <label class="issue" for="6">来店頻度</label>
-        <input
-          id="7"
-          class="issue-checkbox"
-          type="checkbox"
-          value="7"
-          v-model="issues"
-          disabled
-        />
+        <input id="7" class="issue-checkbox" type="checkbox" value="7" v-model="issues" disabled />
         <label class="issue" for="7">人材確保</label>
-        <input
-          id="8"
-          class="issue-checkbox"
-          type="checkbox"
-          value="8"
-          v-model="issues"
-          disabled
-        />
+        <input id="8" class="issue-checkbox" type="checkbox" value="8" v-model="issues" disabled />
         <label class="issue" for="8">新規顧客</label>
-        <input
-          id="9"
-          class="issue-checkbox"
-          type="checkbox"
-          value="9"
-          v-model="issues"
-          disabled
-        />
+        <input id="9" class="issue-checkbox" type="checkbox" value="9" v-model="issues" disabled />
         <label class="issue" for="9">流失客</label>
-        <input
-          id="10"
-          class="issue-checkbox"
-          type="checkbox"
-          value="10"
-          v-model="issues"
-          disabled
-        />
+        <input id="10" class="issue-checkbox" type="checkbox" value="10" v-model="issues" disabled />
         <label class="issue" for="10">購入点数</label>
-        <input
-          id="11"
-          class="issue-checkbox"
-          type="checkbox"
-          value="11"
-          v-model="issues"
-          disabled
-        />
+        <input id="11" class="issue-checkbox" type="checkbox" value="11" v-model="issues" disabled />
         <label class="issue" for="11">リピート率</label>
-        <input
-          id="12"
-          class="issue-checkbox"
-          type="checkbox"
-          value="12"
-          v-model="issues"
-          disabled
-        />
+        <input id="12" class="issue-checkbox" type="checkbox" value="12" v-model="issues" disabled />
         <label class="issue" for="12">売上</label>
-        <input
-          id="13"
-          class="issue-checkbox"
-          type="checkbox"
-          value="13"
-          v-model="issues"
-          disabled
-        />
+        <input id="13" class="issue-checkbox" type="checkbox" value="13" v-model="issues" disabled />
         <label class="issue" for="13">商品単価</label>
       </div>
     </div>
     <div class="profile">
       <Title> LINE QRコード </Title>
-      <img
-        src="~/assets/image/sample-image/my_qrcode_1665625823793.jpg"
-        height="155px"
-        weight="155px"
-      />
+      <img src="~/assets/image/sample-image/my_qrcode_1665625823793.jpg" height="155px" weight="155px" />
     </div>
   </section>
-  
+
   <section class="profiles" v-else>
     <div class="profile">
       <Title> コラボ願望 </Title>
-      <otaInput v-model="message" :isTextarea="true" />
+      <!-- <otaInput v-model="message" :isTextarea="true" /> -->
       <textarea v-model="message"></textarea>
     </div>
     <div class="profile">
@@ -181,43 +86,37 @@
         <tr>
           <td class="profile-title">店舗名</td>
           <td class="profile-value">
-            <otaInput v-model="shop_name"/>
-            <input v-model="shop_name"/>
+            <otaInput v-model="shop_name" />
           </td>
         </tr>
         <tr>
           <td class="profile-title">代表者名</td>
           <td class="profile-value">
-            <otaInput v-model="representative"/>
-            <input v-model="representative"/>
+            <otaInput v-model="representative" />
           </td>
         </tr>
         <tr>
           <td class="profile-title">業種</td>
           <td class="profile-value">
-            <otaInput v-model="industry"/>
-            <input v-model="industry"/>
+            <otaInput v-model="industry" />
           </td>
         </tr>
         <tr>
           <td class="profile-title">店舗住所</td>
           <td class="profile-value">
-            <otaInput v-model="address"/>
-            <input v-model="address"/>
+            <otaInput v-model="address" />
           </td>
         </tr>
         <tr>
           <td class="profile-title">LINE管理者</td>
           <td class="profile-value">
-            <otaInput v-model="line_administrator"/>
-            <input v-model="line_administrator"/>
+            <otaInput v-model="line_administrator" />
           </td>
         </tr>
         <tr>
           <td class="profile-title">フリガナ</td>
           <td class="profile-value">
-            <otaInput v-model="line_furigana"/>
-            <input v-model="line_furigana"/>
+            <otaInput v-model="line_furigana" />
           </td>
         </tr>
       </table>
@@ -225,114 +124,35 @@
     <div class="profile">
       <Title> お店紹介 </Title>
       <otaInput v-model="introduction" :isTextarea="true" />
-      <textarea v-model="introduction"></textarea>
     </div>
     <div class="profile">
       <Title> 経営課題 </Title>
       <div class="profile-issues">
-        <input
-          id="1"
-          class="issue-checkbox"
-          type="checkbox"
-          value="1"
-          v-model="issues"
-        />
+        <input id="1" class="issue-checkbox" type="checkbox" value="1" v-model="issues" />
         <label class="issue" for="1">集客</label>
-        <input
-          id="2"
-          class="issue-checkbox"
-          type="checkbox"
-          value="2"
-          v-model="issues"
-        />
+        <input id="2" class="issue-checkbox" type="checkbox" value="2" v-model="issues" />
         <label class="issue" for="2">認知度</label>
-        <input
-          id="3"
-          class="issue-checkbox"
-          type="checkbox"
-          value="3"
-          v-model="issues"
-        />
+        <input id="3" class="issue-checkbox" type="checkbox" value="3" v-model="issues" />
         <label class="issue" for="3">ブランディング</label>
-        <input
-          id="4"
-          class="issue-checkbox"
-          type="checkbox"
-          value="4"
-          v-model="issues"
-        />
+        <input id="4" class="issue-checkbox" type="checkbox" value="4" v-model="issues" />
         <label class="issue" for="4">社員教育</label>
-        <input
-          id="5"
-          class="issue-checkbox"
-          type="checkbox"
-          value="5"
-          v-model="issues"
-        />
+        <input id="5" class="issue-checkbox" type="checkbox" value="5" v-model="issues" />
         <label class="issue" for="5">販路拡大</label>
-        <input
-          id="6"
-          class="issue-checkbox"
-          type="checkbox"
-          value="6"
-          v-model="issues"
-        />
+        <input id="6" class="issue-checkbox" type="checkbox" value="6" v-model="issues" />
         <label class="issue" for="6">来店頻度</label>
-        <input
-          id="7"
-          class="issue-checkbox"
-          type="checkbox"
-          value="7"
-          v-model="issues"
-        />
+        <input id="7" class="issue-checkbox" type="checkbox" value="7" v-model="issues" />
         <label class="issue" for="7">人材確保</label>
-        <input
-          id="8"
-          class="issue-checkbox"
-          type="checkbox"
-          value="8"
-          v-model="issues"
-        />
+        <input id="8" class="issue-checkbox" type="checkbox" value="8" v-model="issues" />
         <label class="issue" for="8">新規顧客</label>
-        <input
-          id="9"
-          class="issue-checkbox"
-          type="checkbox"
-          value="9"
-          v-model="issues"
-        />
+        <input id="9" class="issue-checkbox" type="checkbox" value="9" v-model="issues" />
         <label class="issue" for="9">流失客</label>
-        <input
-          id="10"
-          class="issue-checkbox"
-          type="checkbox"
-          value="10"
-          v-model="issues"
-        />
+        <input id="10" class="issue-checkbox" type="checkbox" value="10" v-model="issues" />
         <label class="issue" for="10">購入点数</label>
-        <input
-          id="11"
-          class="issue-checkbox"
-          type="checkbox"
-          value="11"
-          v-model="issues"
-        />
+        <input id="11" class="issue-checkbox" type="checkbox" value="11" v-model="issues" />
         <label class="issue" for="11">リピート率</label>
-        <input
-          id="12"
-          class="issue-checkbox"
-          type="checkbox"
-          value="12"
-          v-model="issues"
-        />
+        <input id="12" class="issue-checkbox" type="checkbox" value="12" v-model="issues" />
         <label class="issue" for="12">売上</label>
-        <input
-          id="13"
-          class="issue-checkbox"
-          type="checkbox"
-          value="13"
-          v-model="issues"
-        />
+        <input id="13" class="issue-checkbox" type="checkbox" value="13" v-model="issues" />
         <label class="issue" for="13">商品単価</label>
       </div>
     </div>
@@ -355,11 +175,11 @@
 
   </section>
 </template>
+
 <script>
 import Title from "~/components/Title.vue";
 import otaInput from "~/components/otaInput.vue";
-import { getFips } from "crypto";
-import { getFirestore, getDoc, updateDoc, doc } from "@firebase/firestore";
+import { getFirestore, getDoc, updateDoc, doc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, } from "firebase/auth";
 
 export default {
@@ -378,9 +198,9 @@ export default {
   mounted() {
     this.getData();
   },
-  methods:{
+  methods: {
     // データの取得
-    getData(){
+    getData() {
       let uid = "";   // テスト中(初期値決める)
       const auth = getAuth();
       onAuthStateChanged(auth, async (user) => {
@@ -411,19 +231,19 @@ export default {
           if (docSnapIssues.exists()) {
             this.issues = [];  // ユーザの経営課題の初期化
             const issuesData = docSnapIssues.data();  // ユーザの経営課題の取得
-            if (issuesData.attracting_customers) {this.issues.push("1")};
-            if (issuesData.awareness) {this.issues.push("2")};
-            if (issuesData.branding) {this.issues.push("3")};
-            if (issuesData.employee_training) {this.issues.push("4")};
-            if (issuesData.expansion) {this.issues.push("5")};
-            if (issuesData.frequency) {this.issues.push("6")};
-            if (issuesData.human_resources) {this.issues.push("7")};
-            if (issuesData.new_customers) {this.issues.push("8")};
-            if (issuesData.outflow) {this.issues.push("9")};
-            if (issuesData.purchases) {this.issues.push("10")};
-            if (issuesData.repeat_rate) {this.issues.push("11")};
-            if (issuesData.sales) {this.issues.push("12")};
-            if (issuesData.unit_price) {this.issues.push("13")};
+            if (issuesData.attracting_customers) { this.issues.push("1") };
+            if (issuesData.awareness) { this.issues.push("2") };
+            if (issuesData.branding) { this.issues.push("3") };
+            if (issuesData.employee_training) { this.issues.push("4") };
+            if (issuesData.expansion) { this.issues.push("5") };
+            if (issuesData.frequency) { this.issues.push("6") };
+            if (issuesData.human_resources) { this.issues.push("7") };
+            if (issuesData.new_customers) { this.issues.push("8") };
+            if (issuesData.outflow) { this.issues.push("9") };
+            if (issuesData.purchases) { this.issues.push("10") };
+            if (issuesData.repeat_rate) { this.issues.push("11") };
+            if (issuesData.sales) { this.issues.push("12") };
+            if (issuesData.unit_price) { this.issues.push("13") };
           } else {
             console.log("No such document.");
           }
@@ -431,7 +251,7 @@ export default {
       });
     },
     // 編集の保存
-    async updateData(){
+    async updateData() {
       const db = getFirestore();
       await updateDoc(doc(db, "users", this.userNum), {
         message: this.message,
@@ -461,16 +281,9 @@ export default {
       alert("編集を保存しました。");
       this.isEditing = !this.isEditing;
     },
-    // QRコード、ボタンの表示切り替え
-    toggle: function () {
-      this.show = true;
-    },
   },
   data() {
     return {
-      shopName: "のりや",
-      userName: "田中",
-      isInputMode: false,
       show: false,
       userNum: "",
       message: "",
@@ -486,6 +299,7 @@ export default {
   },
 };
 </script>
+
 <style lang="scss" scoped>
 input {
   width: 100%;
@@ -494,16 +308,19 @@ input {
   border: 0;
   font-weight: bold;
 }
+
 textarea {
   resize: vertical;
   width: 100%;
   height: 60px;
 }
+
 input,
 textarea {
   background-color: #c4c4c4;
   border-radius: 4px;
 }
+
 .profiles {
   padding: 0 10%;
   text-align: center;
@@ -518,6 +335,7 @@ textarea {
     table {
       width: 100%;
     }
+
     &-value {
       padding-left: 20px;
 
@@ -530,6 +348,7 @@ textarea {
         font-weight: bold;
       }
     }
+
     &-issues {
       display: grid;
       grid-template-columns: 50% 50%;
@@ -539,9 +358,11 @@ textarea {
       input {
         display: none;
       }
-      input:checked + label {
+
+      input:checked+label {
         background-color: #f1da8a;
       }
+
       .issue {
         // padding: 0 12px;
         background-color: #d9d9d9;

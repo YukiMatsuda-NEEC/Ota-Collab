@@ -16,6 +16,23 @@
   </section>
 </template>
 
+<script>
+export default {
+  name: "recommendCard",
+  props: {
+    recommend: {
+      type: Object,
+      required: false,
+      default: false,
+    },
+  },
+  data() {
+    return {
+    };
+  },
+};
+</script>
+
 <style lang="scss" scoped>
 .offer {
   .profile {
@@ -71,23 +88,3 @@
   }
 }
 </style>
-
-<script>
-export default {
-  name: "OfferCard",
-  props: {
-    recommend: {
-      type: Object,
-      required: false,
-      default: false,
-    },
-  },
-  data() {
-    return {
-      industry: "小売り業",
-      shop_name: "海苔屋",
-      message: "",
-    };
-  },
-};
-</script>

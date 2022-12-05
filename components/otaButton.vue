@@ -8,6 +8,24 @@
   </button>
 </template>
 
+<script>
+export default {
+  name: "otaButton",
+  props: {
+    isDisabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    buttonStyle: {
+      type: String,
+      required: true,
+      default: "",
+    },
+  },
+};
+</script>
+
 <style lang="scss" scoped>
 button {
   display: block;
@@ -116,19 +134,3 @@ button {
 }
 </style>
 
-<script>
-export default {
-  props: {
-    isDisabled: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-    buttonStyle: {
-      type: String,
-      required: true,
-      default: "",
-    },
-  },
-};
-</script>

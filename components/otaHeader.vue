@@ -3,6 +3,15 @@
     <p>OTA collab.</p>
   </header>
 </template>
+
+<script>
+export default {
+  name: "otaHeader",
+  components: {
+  },
+};
+</script>
+
 <style lang="scss" scoped>
 header {
   text-align: center;
@@ -14,12 +23,3 @@ header {
   }
 }
 </style>
-<script>
-import OtaHeader from "~/components/otaHeader.vue";
-export default {
-  components: {
-    OtaHeader,
-  },
-  name: "Header",
-};
-</script>
