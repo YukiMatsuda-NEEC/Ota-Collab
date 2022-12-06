@@ -36,7 +36,7 @@
       <h3 v-if="checkWaitData[2]" class="connecting">通信中...</h3>
       <h3 v-if="(!checkWaitData[2] & (offersSubmitted.length == 0))" class="connecting">返信を待ちましょう</h3>
       <div v-for="offerSubmitted in offersSubmitted">
-        <div @click="openSubmittedProfile(offerSubmitted.userNum, offerReceived.offerID)">
+        <div @click="openSubmittedProfile(offerSubmitted.userNum, offerSubmitted.offerID)">
           <replyWait :offerSubmitted="offerSubmitted" />
         </div>
       </div>
