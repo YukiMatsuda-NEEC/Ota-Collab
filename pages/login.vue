@@ -45,6 +45,9 @@ export default {
     returnTop() {
       this.$router.push('/')
     },
+    returnOffer() {
+      this.$router.push('/offer')
+    },
     onLoginButton() {
       console.log(process.env.API_KEY);
       const auth = getAuth();
@@ -52,7 +55,11 @@ export default {
         .then((userCredential) => {
           // Signed in
           // const user = userCredential.user;
-          this.returnTop()
+          if (this.$route.params.returnPage == "offer") {
+            this.returnOffer();
+          } else {
+            this.returnTop();
+          }
         })
         .catch((error) => {
           const errorCode = error.code;

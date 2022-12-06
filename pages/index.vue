@@ -2,8 +2,8 @@
   <div>
     <header>
       <p>OTA collab.</p>
-      <router-link to="/offer">オファー画面へ</router-link>
-      <ota-Button @click="Edit" buttonStyle="cancel">Edit</ota-Button>
+      <ota-button @click="returnOffer" buttonStyle="return">オファー画面へ</ota-button>
+      <ota-button @click="Edit" buttonStyle="cancel">Edit</ota-button>
     </header>
     <section class="header-imgs">
       <img src="~/assets/image/sample-image/kawashimaHeader.jpg" alt="ヘッダーイメージ" class="header-img" />
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import otaButton from "~/components/otaButton.vue";
 import profiles from "~/components/profiles.vue";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, } from "firebase/auth";
@@ -22,6 +23,7 @@ import { getAuth, onAuthStateChanged, } from "firebase/auth";
 export default {
   name: "IndexPage",
   components: {
+    otaButton,
     profiles,
   },
   data() {
@@ -32,11 +34,26 @@ export default {
     };
   },
   mounted() {
+    this.checklogin();
     this.getShopName();
   },
   methods: {
     Edit() {
       this.isEditing = !this.isEditing;
+    },
+    returnOffer() {
+      this.$router.push('/offer')
+    },
+    // ログイン状態の確認
+    checklogin() {
+      const auth = getAuth();
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          // ログイン
+        } else {
+          this.$router.push({ name: 'login', params: { returnPage: 'index' } });
+        }
+      });
     },
     // 店舗名の取得
     async getShopName() {

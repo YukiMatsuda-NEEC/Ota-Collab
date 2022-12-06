@@ -2,9 +2,7 @@
   <div>
     <header>
       <p>OTA collab.</p>
-      <p>
-        <router-link to="/">プロフィール画面へ</router-link>
-      </p>
+      <ota-button @click="returnTop" buttonStyle="return">プロフィール画面へ</ota-button>
     </header>
     <section class="mode">
       <button @click="change1" v-if="(displayType !== 1)">オファー箱</button>
@@ -19,7 +17,7 @@
       <h3 v-if="checkWaitData[0]" class="connecting">通信中...</h3>
       <h3 v-if="!checkWaitData[0] & (offersReceived.length == 0)" class="connecting">オファーが来るのを待ちましょう</h3>
       <div v-for="offerReceived in offersReceived">
-        <div @click="openReceivedProfile(offerReceived.userNum, offerReceived.offerID)">
+        <div @click="openReceivedProfile(offerReceived.userNum, offerReceived.offerID, offerReceived.is_succeeded)">
           <OfferCard :offerReceived="offerReceived" />
         </div>
       </div>
@@ -48,6 +46,7 @@
 </template>
 
 <script>
+import otaButton from "~/components/otaButton.vue";
 import OfferCard from "~/components/OfferCard.vue";
 import recommendCard from "~/components/recommendCard.vue";
 import replyWait from "~/components/replyWait.vue";
@@ -57,6 +56,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 export default {
   name: "OfferPage",
   components: {
+    otaButton,
     OfferCard,
     recommendCard,
     replyWait
@@ -72,6 +72,7 @@ export default {
     };
   },
   mounted() {
+    this.checklogin();
     this.checkDisplayType();
     this.matching();
     this.getOffersReceived();
@@ -87,9 +88,23 @@ export default {
     change3() {
       this.displayType = 3;
     },
+    returnTop() {
+      this.$router.push('/')
+    },
+    // ログイン状態の確認
+    checklogin() {
+      const auth = getAuth();
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          // ログイン
+        } else {
+          this.$router.push({ name: 'login', params: { returnPage: 'offer' } });
+        }
+      });
+    },
     // 表示するタブの確認
     checkDisplayType() {
-      if (typeof this.$route.params.displayType != "undefined") {
+      if (this.$route.params.displayType) {
         this.displayType = this.$route.params.displayType;
       }
     },
@@ -114,6 +129,7 @@ export default {
               console.log("受信：" + doc.data().from);  //////////////////////
               const offerData = await this.getUserData(doc.data().from);
               offerData["offerID"] = doc.id;  // オファーIDを配列に入れる
+              offerData["is_succeeded"] = doc.data().is_succeeded;  // is_succeededを配列に入れる
               this.offersReceived.push(offerData);
             };
           });
@@ -199,8 +215,8 @@ export default {
         return offerReturn;
       }
     },
-    openReceivedProfile(userNum, offerID) {
-      this.$router.push({ name: 'offerProfile', params: { userNum: userNum, offerID: offerID, displayType: 1 } });
+    openReceivedProfile(userNum, offerID, is_succeeded) {
+      this.$router.push({ name: 'offerProfile', params: { userNum: userNum, offerID: offerID, is_succeeded: is_succeeded, displayType: 1 } });
     },
     openRecommendProfile(userNum) {
       this.$router.push({ name: 'offerProfile', params: { userNum: userNum, displayType: 2 } });
@@ -213,6 +229,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.link-profile {
+  height: 30px;
+  width: 30px;
+}
 .connecting {
   text-align: center;
   margin-top: 3em;

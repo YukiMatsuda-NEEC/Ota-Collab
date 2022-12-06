@@ -3,9 +3,9 @@
     <div class="profile">
       <img src="~/assets/image/sample-image/shop-sample-icon.jpg" alt="プロフィールアイコン" class="profile-icon" />
       <div class="profile_store">{{ offerSubmitted["shop_name"] }}</div>
-      <p>
+      <!-- <p>
         残り<span>{{ day }}日</span>
-      </p>
+      </p> -->
     </div>
   </section>
 </template>

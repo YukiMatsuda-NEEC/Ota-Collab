@@ -4,9 +4,9 @@
       <img src="~/assets/image/sample-image/shop-sample-icon.jpg" alt="プロフィールアイコン" class="profile-icon" />
       <div class="profile_industry">{{ offerReceived["industry"] }}</div>
       <div class="profile_store">{{ offerReceived["shop_name"] }}</div>
-      <p>
+      <!-- <p>
         残り<span>{{ day }}</span>日
-      </p>
+      </p> -->
     </div>
   </section>
 </template>
