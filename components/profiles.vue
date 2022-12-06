@@ -172,7 +172,7 @@
   <section class="profiles" v-else>
     <div class="profile">
       <Title> コラボ願望 </Title>
-      <otaInput v-model="message" :isTextarea="true" />
+      <!-- <otaInput v-model="message" :isTextarea="true" /> -->
       <textarea v-model="message"></textarea>
     </div>
     <div class="profile">
@@ -182,49 +182,43 @@
           <td class="profile-title">店舗名</td>
           <td class="profile-value">
             <otaInput v-model="shop_name" />
-            <input v-model="shop_name" />
           </td>
         </tr>
         <tr>
           <td class="profile-title">代表者名</td>
           <td class="profile-value">
             <otaInput v-model="representative" />
-            <input v-model="representative" />
           </td>
         </tr>
         <tr>
           <td class="profile-title">業種</td>
           <td class="profile-value">
             <otaInput v-model="industry" />
-            <input v-model="industry" />
           </td>
         </tr>
         <tr>
           <td class="profile-title">店舗住所</td>
           <td class="profile-value">
             <otaInput v-model="address" />
-            <input v-model="address" />
           </td>
         </tr>
         <tr>
           <td class="profile-title">LINE管理者</td>
           <td class="profile-value">
             <otaInput v-model="line_administrator" />
-            <input v-model="line_administrator" />
           </td>
         </tr>
         <tr>
           <td class="profile-title">フリガナ</td>
           <td class="profile-value">
             <otaInput v-model="line_furigana" />
-            <input v-model="line_furigana" />
           </td>
         </tr>
       </table>
     </div>
     <div class="profile">
       <Title> お店紹介 </Title>
-      <otaInput v-model="introduction" :isTextarea="true" />
+      <!-- <otaInput v-model="introduction" :isTextarea="true" /> -->
       <textarea v-model="introduction"></textarea>
     </div>
     <div class="profile">
