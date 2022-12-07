@@ -1,0 +1,152 @@
+<template>
+  <div>
+    <section v-if="true">
+      <img
+        class="icon"
+        :style="isLogin || isSingup ? 'margin-top: 0' : ''"
+        src="~/assets/image/otaCollabIcons/otaIcon.png"
+        alt=""
+      />
+    </section>
+    <section v-if="!isLogin && !isSingup">
+      <ota-button @click="isLogin = true" buttonStyle="login"
+        >ログイン</ota-button
+      >
+      <ota-button @click="isSingup = true" buttonStyle="signUp"
+        >新規登録</ota-button
+      >
+    </section>
+    <section class="Login-inputs" v-if="isLogin || isSingup">
+      <ota-input
+        placeholder="メールアドレス・ID"
+        v-model="email"
+        inputStyle="LoginInput"
+      ></ota-input>
+      <ota-input
+        placeholder="パスワード"
+        v-model="password"
+        inputStyle="LoginInput"
+      ></ota-input>
+      <ota-button v-if="isLogin" @click="onLoginButton" buttonStyle="login"
+        >ログイン</ota-button
+      >
+      <ota-button v-else @click="onSingupButton" buttonStyle="signUp"
+        >新規登録</ota-button
+      >
+    </section>
+  </div>
+</template>
+<style lang="scss" scoped>
+.Login-inputs {
+  padding: 0 54px;
+}
+section {
+  text-align: center;
+}
+.icon {
+  margin-top: 107px;
+  height: 175px;
+  width: 175px;
+}
+</style>
+<script>
+import otaButton from "~/components/otaButton.vue";
+import otaInput from "~/components/otaInput.vue";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { doc, setDoc, getFirestore } from "firebase/firestore";
+
+export default {
+  name: "LoginPage",
+  data() {
+    return {
+      password: "",
+      email: "",
+      isLogin: false,
+      isSingup: false,
+    };
+  },
+  components: {
+    otaButton,
+    otaInput,
+  },
+  methods: {
+    returnTop(){
+        this.$router.push('/')
+    },
+    onLoginButton() {
+      console.log(process.env.API_KEY);
+      const auth = getAuth();
+      signInWithEmailAndPassword(auth, this.email, this.password)
+        .then((userCredential) => {
+          // Signed in
+          // const user = userCredential.user;
+          this.returnTop()
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.error(errorCode, errorMessage);
+        });
+    },
+    async onSingupButton() {
+      const auth = getAuth();
+      await createUserWithEmailAndPassword(auth, this.email, this.password)
+        .then(async (userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user.uid);
+          // 連番の最後を取得
+          let db = getFirestore();
+          const data = await this.$axios.$get('/getLastNum');
+          const userNum = data.lastNum;
+          // uidと連番の紐づけを作成
+          await setDoc(doc(db, "uid_to_num", user.uid), {
+            num: userNum,
+          });
+          // usersのひな形を作成
+          await setDoc(doc(db, "users", userNum), {
+            address: "",
+            facebook: "",
+            industry: "",
+            instagram: "",
+            introduction: "",
+            line_administrator: "",
+            line_furigana: "",
+            message: "",
+            representative: "",
+            shop_name: "",
+            twitter: "",
+          });
+          // ManagementIssuesのひな形を作成
+          await setDoc(doc(db, "ManagementIssues", userNum), {
+            attracting_customers: false,
+            awareness: false,
+            branding: false,
+            employee_training: false,
+            expansion: false,
+            frequency: false,
+            human_resources: false,
+            new_customers: false,
+            outflow: false,
+            purchases: false,
+            repeat_rate: false,
+            sales: false,
+            unit_price: false,
+          });
+          this.returnTop()
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.error(errorCode, errorMessage);
+          // ..
+        });
+    },
+  },
+};
+</script>
