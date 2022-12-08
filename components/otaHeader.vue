@@ -15,10 +15,10 @@ header {
 }
 </style>
 <script>
-import OtaHeader from "~/components/otaHeader.vue";
+// import OtaHeader from "~/components/otaHeader.vue";
 export default {
   components: {
-    OtaHeader,
+    // OtaHeader,
   },
   name: "Header",
 };
