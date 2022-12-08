@@ -89,6 +89,7 @@ export default {
     // this.getLastNum();
   },
   mounted() {
+    this.checklogin();
     this.getShopName();
     // this.matching();  // createdだと二度実行される場合があるため
   },
@@ -101,6 +102,17 @@ export default {
     // },
     Edit() {
       this.isEditing = !this.isEditing;
+    },
+    // ログイン状態の確認
+    checklogin() {
+      const auth = getAuth();
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          // ログイン中の処理
+        } else {
+          this.$router.push({ name: 'login', params: { returnPage: 'index' } });
+        }
+      });
     },
     // 店舗名の取得
     async getShopName(){
