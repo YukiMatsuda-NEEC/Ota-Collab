@@ -5,19 +5,19 @@
       <!-- 承認待ち -->
     </header>
     <section class="mode">
-      <button @click="change1" v-if="(displayType !== 1)">オファー箱</button>
-      <button @click="change1" v-if="(displayType == 1)" style="background-color: lightgreen;">オファー箱</button>
+      <button @click="change1" v-if="(displayType !== 1)">受信済み</button>
+      <button @click="change1" v-if="(displayType == 1)" class="button_selected">受信済み</button>
       <button @click="change2" v-if="(displayType !== 2)">オススメ</button>
-      <button @click="change2" v-if="(displayType == 2)" style="background-color: lightgreen;">オススメ</button>
-      <button @click="change3" v-if="(displayType !== 3)">返信待ち</button>
-      <button @click="change3" v-if="(displayType == 3)" style="background-color: lightgreen;">返信待ち</button>
+      <button @click="change2" v-if="(displayType == 2)" class="button_selected">オススメ</button>
+      <button @click="change3" v-if="(displayType !== 3)">送信済み</button>
+      <button @click="change3" v-if="(displayType == 3)" class="button_selected">送信済み</button>
     </section>
 
     <div v-if="(displayType == 1)">
       <h3 v-if="checkWaitData[0]" class="connecting">通信中...</h3>
       <h3 v-if="!checkWaitData[0] & (offersReceived.length == 0)" class="connecting">オファーが来るのを待ちましょう</h3>
       <div v-for="offerReceived in offersReceived">
-        <div @click="openReceivedProfile(offerReceived.userNum, offerReceived.offerID)">
+        <div @click="openReceivedProfile(offerReceived.userNum, offerReceived.offerID, offerReceived.is_succeeded)">
           <OfferCard :offerReceived="offerReceived" />
         </div>
       </div>
@@ -36,7 +36,7 @@
       <h3 v-if="checkWaitData[2]" class="connecting">通信中...</h3>
       <h3 v-if="(!checkWaitData[2] & (offersSubmitted.length == 0))" class="connecting">返信を待ちましょう</h3>
       <div v-for="offerSubmitted in offersSubmitted">
-        <div @click="openSubmittedProfile(offerSubmitted.userNum, offerSubmitted.offerID)">
+        <div @click="openSubmittedProfile(offerSubmitted.userNum, offerSubmitted.offerID, offerSubmitted.is_succeeded)">
           <replyWait :offerSubmitted="offerSubmitted" />
         </div>
       </div>
@@ -69,6 +69,12 @@ section button {
   display: inline-block;
   font-size: 14px;
 }
+
+.button_selected {
+  background-color: lightgreen;
+  border: 1px solid black;
+} 
+
 header {
   text-align: center;
   h2 {
@@ -159,6 +165,7 @@ export default {
               console.log("受信："+doc.data().from);  //////////////////////
               const offerData = await this.getUserData(doc.data().from);
               offerData["offerID"] = doc.id;
+              offerData["is_succeeded"] = doc.data().is_succeeded;
               this.offersReceived.push(offerData);
             };
           });
@@ -214,6 +221,8 @@ export default {
             console.log("送信済み："+doc.data().to);  //////////////////////
             const offerData = await this.getUserData(doc.data().to);
             offerData["offerID"] = doc.id;
+            offerData["is_succeeded"] = doc.data().is_succeeded;
+            offerData["is_rejected"] = doc.data().is_rejected;
             this.offersSubmitted.push(offerData);
           });
           this.checkWaitData[2] = false;
@@ -244,14 +253,23 @@ export default {
         return offerReturn;
       }
     },
-    openReceivedProfile(userNum, offerID){
-      this.$router.push({ name: 'offerProfile', params: { userNum: userNum, offerID: offerID, displayType: 1} });
+    openReceivedProfile(userNum, offerID, is_succeeded){
+      this.$router.push({
+        name: 'offerProfile', 
+        params: { userNum: userNum, offerID: offerID, is_succeeded: is_succeeded, displayType: 1}
+      });
     },
     openRecommendProfile(userNum){
-      this.$router.push({ name: 'offerProfile', params: { userNum: userNum, displayType: 2} });
+      this.$router.push({
+        name: 'offerProfile', 
+        params: { userNum: userNum, displayType: 2} 
+      });
     },
-    openSubmittedProfile(userNum, offerID){
-      this.$router.push({ name: 'offerProfile', params: { userNum: userNum, offerID: offerID, displayType: 3} });
+    openSubmittedProfile(userNum, offerID, is_succeeded){
+      this.$router.push({
+        name: 'offerProfile', 
+        params: { userNum: userNum, offerID: offerID, is_succeeded: is_succeeded, displayType: 3} 
+      });
     },
   },
 };

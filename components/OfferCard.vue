@@ -8,6 +8,7 @@
       />
       <div class="profile_industry">{{ offerReceived["industry"] }}</div>
       <div class="profile_store">{{ offerReceived["shop_name"] }}</div>
+      <div class="approval_message">{{ approvalMessage }}</div>
       <p>
         残り<span>{{ day }}</span
         >日
@@ -61,6 +62,11 @@ span {
     margin-right: 20px;
     font-size: 25px;
   }
+  .approval_message {
+    text-align: right;
+    margin-right: 20px;
+    color: rgb(60, 190, 60);
+  }
 }
 </style>
 
@@ -79,7 +85,18 @@ export default {
       industry: "小売り業",
       store: "海苔屋",
       day: 4,
+      approvalMessage: "",
     };
   },
+  mounted() {
+    this.checkApproval();
+  },
+  methods: {
+    checkApproval(){
+      if (this.offerReceived["is_succeeded"]) {
+        this.approvalMessage = "承認しました";
+      }
+    }
+  }
 };
 </script>

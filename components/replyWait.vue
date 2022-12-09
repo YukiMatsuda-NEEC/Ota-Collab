@@ -7,6 +7,9 @@
           class="profile-icon"
         />
         <div class="profile_store">{{ offerSubmitted["shop_name"] }}</div>
+        <div class="wait_message">{{ waitMessage }}</div>
+        <div class="succeeded_message">{{ succeededMessage }}</div>
+        <div class="rejected_message">{{ rejectedMessage }}</div>
         <p>
           残り<span>{{ day }}日</span>
         </p>
@@ -37,9 +40,23 @@ span {
     border-radius: 13px 13px 0px 45px;
   }
   div.profile_store {
-    float: right;
+    text-align: right;
     margin-right: 20px;
     font-size: 25px;
+  }
+  .wait_message {
+    text-align: right;
+    margin-right: 20px;
+  }
+  .succeeded_message {
+    text-align: right;
+    margin-right: 20px;
+    color: rgb(60, 190, 60);
+  }
+  .rejected_message {
+    text-align: right;
+    margin-right: 20px;
+    color: red;
   }
 }
 </style>
@@ -58,7 +75,24 @@ export default {
     return {
       store: "海苔屋",
       day: 4,
+      waitMessage: "（返信待ちです）",
+      succeededMessage: "",
+      rejectedMessage: "",
     };
   },
+  mounted() {
+    this.checkReply();
+  },
+  methods: {
+    checkReply(){
+      if (this.offerSubmitted["is_succeeded"]) {
+        this.waitMessage = "";
+        this.succeededMessage = "承認されました！";
+      } else if (this.offerSubmitted["is_rejected"]) {
+        this.waitMessage = "";
+        this.rejectedMessage = "拒否されました";
+      }
+    }
+  }
 };
 </script>
