@@ -10,9 +10,9 @@
         <div class="wait_message">{{ waitMessage }}</div>
         <div class="succeeded_message">{{ succeededMessage }}</div>
         <div class="rejected_message">{{ rejectedMessage }}</div>
-        <p>
+        <!-- <p>
           残り<span>{{ day }}日</span>
-        </p>
+        </p> -->
       </div>
     </section>
 </template>

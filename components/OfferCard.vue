@@ -9,10 +9,10 @@
       <div class="profile_industry">{{ offerReceived["industry"] }}</div>
       <div class="profile_store">{{ offerReceived["shop_name"] }}</div>
       <div class="approval_message">{{ approvalMessage }}</div>
-      <p>
+      <!-- <p>
         残り<span>{{ day }}</span
         >日
-      </p>
+      </p> -->
     </div>
   </section>
 </template>
