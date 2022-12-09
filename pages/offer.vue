@@ -105,6 +105,7 @@ export default {
     };
   },
   mounted() {
+    this.checklogin();
     this.checkDisplayType();
     this.matching();
     this.getOffersReceived();
@@ -120,9 +121,20 @@ export default {
     change3() {
       this.displayType = 3;
     },
+    // ログイン状態の確認
+    checklogin() {
+      const auth = getAuth();
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          // ログイン中の処理
+        } else {
+          this.$router.push({ name: 'login', params: { returnPage: 'offer' } });
+        }
+      });
+    },
     // 表示するタブの確認
     checkDisplayType(){
-      if(typeof this.$route.params.displayType != "undefined"){
+      if(this.$route.params.displayType){
         this.displayType = this.$route.params.displayType;
       }
     },
@@ -238,7 +250,7 @@ export default {
     openRecommendProfile(userNum){
       this.$router.push({ name: 'offerProfile', params: { userNum: userNum, displayType: 2} });
     },
-    openSubmittedProfile(userNum){
+    openSubmittedProfile(userNum, offerID){
       this.$router.push({ name: 'offerProfile', params: { userNum: userNum, offerID: offerID, displayType: 3} });
     },
   },
