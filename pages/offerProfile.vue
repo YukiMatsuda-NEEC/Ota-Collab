@@ -270,8 +270,8 @@ export default {
         console.log("No such document.");
       }
       const storage = getStorage();
-      const listRef = ref(storage, "/" + this.userNum); //ユーザーイメージの取得
-      console.log("test", this.userNum);
+      const listRef = ref(storage, "/" + this.$route.params.userNum); //ユーザーイメージの取得
+      console.log("test", this.$route.params.userNum);
       listAll(listRef).then((res) => {
         console.log(res.items);
         for (var i = 0; res.items.length > i; i++) {
@@ -279,9 +279,9 @@ export default {
           if (res.items[i].name.split(".")[0] == "QR") {
             const pathReference = ref(
               storage,
-              this.userNum + "/" + res.items[i].name
+              this.$route.params.userNum + "/" + res.items[i].name
             );
-            getDownloadURL(ref(storage, this.userNum + "/" + res.items[i].name))
+            getDownloadURL(ref(storage, this.$route.params.userNum + "/" + res.items[i].name))
               .then((url) => {
                 this.QrUrl = url;
               })
