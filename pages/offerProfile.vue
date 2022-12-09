@@ -179,7 +179,7 @@
 
       <div class="profile" v-show="show">
         <Title> LINE QRコード </Title>
-        <img src="QrUrl" height="155px" weight="155px" />
+        <img :src="this.QrUrl" height="155px" weight="155px" />
       </div>
 
       <!-- オファー箱 -->
