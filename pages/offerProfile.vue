@@ -247,6 +247,7 @@ export default {
     };
   },
   mounted() {
+    this.checkIsSucceeded();
     this.getData();
   },
   methods: {
@@ -338,6 +339,10 @@ export default {
       } else {
         console.log("No such document.");
       }
+    },
+    // 以前に興味あるを押しているか確認
+    checkIsSucceeded(){
+      if(this.$route.params.is_succeeded) { this.show = true };
     },
     // QRコード、ボタンの表示切り替え
     async interestOffer() {

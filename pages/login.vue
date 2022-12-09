@@ -30,7 +30,7 @@
       <ota-button v-if="isLogin" @click="onLoginButton" buttonStyle="login"
         >ログイン</ota-button
       >
-      <ota-button v-else @click="onSingupButton" buttonStyle="signUp"
+      <ota-button v-else @click="onSingupButton" buttonStyle="signUp" id="signupBtn"
         >新規登録</ota-button
       >
     </section>
@@ -100,6 +100,9 @@ export default {
         });
     },
     async onSingupButton() {
+      // ボタンを処理が終わるまで無効にする
+      const signupBtn = document.getElementById("signupBtn");
+      signupBtn.disabled = true;
       const auth = getAuth();
       await createUserWithEmailAndPassword(auth, this.email, this.password)
         .then(async (userCredential) => {
@@ -148,6 +151,9 @@ export default {
           // ...
         })
         .catch((error) => {
+          // エラーで処理が終わったら有効にする
+          const signupBtn = document.getElementById("signupBtn");
+          signupBtn.disabled = false;
           const errorCode = error.code;
           const errorMessage = error.message;
           console.error(errorCode, errorMessage);
