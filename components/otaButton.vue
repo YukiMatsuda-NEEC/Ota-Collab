@@ -59,7 +59,7 @@ button {
   background: #f1da8a;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
-  color: #737171;
+  color: #000000;
 }
 .save {
   width: 180px;
