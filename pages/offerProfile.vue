@@ -41,7 +41,7 @@
             <td class="profile-value">{{ address }}</td>
           </tr>
           <tr>
-            <td class="profile-title">ライン管理者</td>
+            <td class="profile-title">LINE管理者</td>
             <td class="profile-value">{{ line_administrator }}</td>
           </tr>
           <tr>
