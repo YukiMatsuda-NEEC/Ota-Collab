@@ -18,7 +18,7 @@
     </section>
     <section class="Login-inputs" v-if="isLogin || isSingup">
       <ota-input
-        placeholder="メールアドレス・ID"
+        placeholder="メールアドレス"
         v-model="email"
         inputStyle="LoginInput"
       ></ota-input>
