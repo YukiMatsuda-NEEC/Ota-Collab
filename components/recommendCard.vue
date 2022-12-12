@@ -4,11 +4,13 @@
       <img
         v-if="!this.iconUrl"
         src="~/assets/image/sample-image/placeholder.png"
+        alt="プロフィールアイコン"
         class="profile-icon"
       />
       <img
         v-if="this.iconUrl"
         :src="this.iconUrl"
+        alt="プロフィールアイコン"
         class="profile-icon"
       />
       <div class="info">
