@@ -2,6 +2,12 @@
     <section class="offer">
       <div class="profile">
         <img
+          v-if="!this.iconUrl"
+          src="~/assets/image/sample-image/placeholder.png"
+          class="profile-icon"
+        />
+        <img
+          v-if="this.iconUrl"
           :src="this.iconUrl"
           class="profile-icon"
         />

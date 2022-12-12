@@ -6,10 +6,22 @@
     </header>
     <section class="header-imgs">
       <img
+        v-if="!this.headerUrl"
+        src="~/assets/image/sample-image/placeholder.png"
+        class="header-img"
+      />
+      <img
+        v-if="this.headerUrl"
         :src="this.headerUrl"
         class="header-img"
       />
       <img
+        v-if="!this.iconUrl"
+        src="~/assets/image/sample-image/placeholder.png"
+        class="header-icon"
+      />
+      <img
+        v-if="this.iconUrl"
         :src="this.iconUrl"
         class="header-icon"
       />

@@ -2,6 +2,12 @@
   <section class="offer">
     <div class="profile">
       <img
+        v-if="!this.iconUrl"
+        src="~/assets/image/sample-image/placeholder.png"
+        class="profile-icon"
+      />
+      <img
+        v-if="this.iconUrl"
         :src="this.iconUrl"
         class="profile-icon"
       />
@@ -46,9 +52,9 @@ span {
   }
   .profile-icon {
     display: flex;
-
-    width: 254px;
-
+    object-fit: cover;
+    width: 252px;
+    height: 150px;
     border-radius: 13px 13px 0px 60px;
   }
 
