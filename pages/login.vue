@@ -130,6 +130,7 @@ export default {
             representative: "",
             shop_name: "",
             twitter: "",
+            will: true,
           });
           // ManagementIssuesのひな形を作成
           await setDoc(doc(db, "ManagementIssues", userNum), {
