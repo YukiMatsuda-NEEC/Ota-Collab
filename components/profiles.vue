@@ -373,6 +373,7 @@ import {
   uploadBytes,
   listAll,
   getDownloadURL,
+  deleteObject,
 } from "firebase/storage";
 
 export default {
@@ -394,28 +395,50 @@ export default {
   methods: {
     onHeaderUploaded(e) {
       //ヘッダー画像のファイルを取得
-      const image = e.target.files[0];
-      this.uploadImage(image, image.type.split("/")[1], 0);
+      this.img_tmp[0] = e.target.files[0];
     },
     onIconUploaded(e) {
       //アイコン画像のファイルを取得
-      const image = e.target.files[0];
-      this.uploadImage(image, image.type.split("/")[1], 1);
+      this.img_tmp[1] = e.target.files[0];
     },
     onQrUploaded(e) {
       //QR画像のファイルを取得
-      const image = e.target.files[0];
-      this.uploadImage(image, image.type.split("/")[1], 2);
+      this.img_tmp[2] = e.target.files[0];
     },
-    uploadImage(url, type, mode) {
+    uploadImage(url, mode) {
       //引数で取得した画像ファイルを0/icon.pngにアップロード
       //TODO:画像の形式を取得して画像の拡張子を変える
-      console.log(this.userNum);
       const storage = getStorage();
+      this.deleteImg(mode);  // 画像が登録されていれば削除
       const modeArray = ["/Header.", "/Icon.", "/QR."];
+      const type = url.type.split("/")[1];
       const storageRef = ref(storage, this.userNum + modeArray[mode] + type);
       uploadBytes(storageRef, url).then((snapshot) => {
         console.log("Uploaded a blob or file!");
+      });
+    },
+    // 画像登録されていれば削除する（mode 0:ヘッダー画像, 1:アイコン画像, 2:QRコード）
+    deleteImg(mode) {
+      let filePass = "";
+      const storage = getStorage();
+      const listRef = ref(storage, "/" + this.userNum); 
+      listAll(listRef).then((res) => {
+        for (var i = 0; res.items.length > i; i++) {
+          const imgName = res.items[i].name.split(".")[0];
+          if (mode == 0 && imgName == "Header") {
+            filePass = this.userNum + "/" + res.items[i].name;
+          } else if (mode == 1 && imgName == "Icon") {
+            filePass = this.userNum + "/" + res.items[i].name;
+          } else if (mode == 2 && imgName == "QR") {
+            filePass = this.userNum + "/" + res.items[i].name;
+          }
+        }
+        const desertRef = ref(storage, filePass);
+        deleteObject(desertRef).then(() => {
+          // File deleted successfully
+        }).catch((error) => {
+          console.error(error);
+        });
       });
     },
     // データの取得
@@ -555,6 +578,11 @@ export default {
         sales: this.issues.includes("12"),
         unit_price: this.issues.includes("13"),
       });
+      for (let i=0; i<3; i++) {
+        if (this.img_tmp[i]) {
+          this.uploadImage(this.img_tmp[i], i);
+        }
+      }
       alert("編集を保存しました。");
       this.getData();
       this.isEditing = !this.isEditing;
@@ -581,6 +609,7 @@ export default {
       introduction: "",
       issues: [],
       QrUrl: "",
+      img_tmp: [],
     };
   },
 };
