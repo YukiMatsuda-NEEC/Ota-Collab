@@ -2,7 +2,7 @@
     <section class="offer">
       <div class="profile">
         <img
-          src="~/assets/image/sample-image/shop-sample-icon.jpg"
+          :src="this.iconUrl ? this.iconUrl : require('~/assets/image/sample-image/placeholder.png')"
           alt="プロフィールアイコン"
           class="profile-icon"
         />
@@ -62,6 +62,7 @@ span {
 </style>
 
 <script>
+import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
 export default {
   name: "OfferCard",
   props: {
@@ -78,10 +79,12 @@ export default {
       waitMessage: "（返信待ちです）",
       succeededMessage: "",
       rejectedMessage: "",
+      iconUrl: "",
     };
   },
   mounted() {
     this.checkReply();
+    this.getIconUrl();
   },
   methods: {
     checkReply(){
@@ -92,7 +95,27 @@ export default {
         this.waitMessage = "";
         this.rejectedMessage = "拒否されました";
       }
-    }
+    },
+    // アイコン画像の取得
+    getIconUrl() {
+      const userNum = this.offerSubmitted["userNum"];
+      const storage = getStorage();
+      const listRef = ref(storage, "/" + userNum);
+      listAll(listRef).then((res) => {
+        for (var i = 0; res.items.length > i; i++) {
+          const imgName = res.items[i].name.split(".")[0];
+          if (imgName == "Icon") {
+            getDownloadURL(ref(storage, userNum + "/" + res.items[i].name))
+              .then((url) => {
+                this.iconUrl = url;
+              })
+              .catch((error) => {
+                // Handle any errors
+              });
+          }
+        }
+      });
+    },
   }
 };
 </script>

@@ -5,12 +5,12 @@
     </header>
     <section class="header-imgs">
       <img
-        src="~/assets/image/sample-image/kawashimaHeader.jpg"
+        :src="this.headerUrl ? this.headerUrl : require('~/assets/image/sample-image/placeholder.png')"
         alt="ヘッダーイメージ"
         class="header-img"
       />
       <img
-        src="~/assets/image/sample-image/kawashimaIcon.jpg"
+        :src="this.iconUrl ? this.iconUrl : require('~/assets/image/sample-image/placeholder.png')"
         alt="ヘッダーアイコン"
         class="header-icon"
       />
@@ -242,6 +242,8 @@ export default {
       line_administrator: "",
       line_furigana: "",
       introduction: "",
+      headerUrl: "",
+      iconUrl: "",
       QrUrl: "",
       issues: [],
     };
@@ -253,6 +255,45 @@ export default {
   methods: {
     // オファーから移動してきたときのデータの取得
     async getData() {
+      const storage = getStorage();
+      const listRef = ref(storage, "/" + this.$route.params.userNum); //ユーザーイメージの取得
+      console.log("test", this.$route.params.userNum);
+      listAll(listRef).then((res) => {
+        console.log(res.items);
+        for (var i = 0; res.items.length > i; i++) {
+          console.log(res.items[i].name);
+          const imgName = res.items[i].name.split(".")[0];
+          if (imgName == "Header") {
+            getDownloadURL(ref(storage, this.$route.params.userNum + "/" + res.items[i].name))
+              .then((url) => {
+                this.headerUrl = url;
+              })
+              .catch((error) => {
+                // Handle any errors
+              });
+          } else if (imgName == "Icon") {
+            getDownloadURL(ref(storage, this.$route.params.userNum + "/" + res.items[i].name))
+              .then((url) => {
+                this.iconUrl = url;
+              })
+              .catch((error) => {
+                // Handle any errors
+              });
+          } else if (imgName == "QR") {
+            const pathReference = ref(
+              storage,
+              this.$route.params.userNum + "/" + res.items[i].name
+            );
+            getDownloadURL(ref(storage, this.$route.params.userNum + "/" + res.items[i].name))
+              .then((url) => {
+                this.QrUrl = url;
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+          }
+        }
+      });
       const db = getFirestore();
       const docSnapProfile = await getDoc(
         doc(db, "users", this.$route.params.userNum)
@@ -270,28 +311,6 @@ export default {
       } else {
         console.log("No such document.");
       }
-      const storage = getStorage();
-      const listRef = ref(storage, "/" + this.$route.params.userNum); //ユーザーイメージの取得
-      console.log("test", this.$route.params.userNum);
-      listAll(listRef).then((res) => {
-        console.log(res.items);
-        for (var i = 0; res.items.length > i; i++) {
-          console.log(res.items[i].name);
-          if (res.items[i].name.split(".")[0] == "QR") {
-            const pathReference = ref(
-              storage,
-              this.$route.params.userNum + "/" + res.items[i].name
-            );
-            getDownloadURL(ref(storage, this.$route.params.userNum + "/" + res.items[i].name))
-              .then((url) => {
-                this.QrUrl = url;
-              })
-              .catch((error) => {
-                console.error(error);
-              });
-          }
-        }
-      });
       const docSnapIssues = await getDoc(
         doc(db, "ManagementIssues", this.$route.params.userNum)
       );

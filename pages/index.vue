@@ -6,12 +6,12 @@
     </header>
     <section class="header-imgs">
       <img
-        src="~/assets/image/sample-image/kawashimaHeader.jpg"
+        :src="this.headerUrl ? this.headerUrl : require('~/assets/image/sample-image/placeholder.png')"
         alt="ヘッダーイメージ"
         class="header-img"
       />
       <img
-        src="~/assets/image/sample-image/kawashimaIcon.jpg"
+        :src="this.iconUrl ? this.iconUrl : require('~/assets/image/sample-image/placeholder.png')"
         alt="ヘッダーアイコン"
         class="header-icon"
       />
@@ -65,6 +65,7 @@ import Title from "~/components/Title.vue";
 import profiles from "~/components/profiles.vue";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, } from "firebase/auth";
+import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
 
 export default {
   name: "IndexPage",
@@ -81,6 +82,8 @@ export default {
       // offers: [],
       // lastNum: "",
       userNum: "",
+      headerUrl: "",
+      iconUrl: "",
     };
   },
   created() {
@@ -90,7 +93,7 @@ export default {
   },
   mounted() {
     this.checklogin();
-    this.getShopName();
+    this.getData();
     // this.matching();  // createdだと二度実行される場合があるため
   },
   methods: {
@@ -114,20 +117,51 @@ export default {
         }
       });
     },
-    // 店舗名の取得
-    async getShopName(){
+    // 店舗名、ヘッダー・アイコン画像の取得
+    async getData(){
       let uid = "";   // テスト中(初期値決める)
       const auth = getAuth();
       onAuthStateChanged(auth, async (user) => {
         if (user) {
           uid = user.uid;  // ユーザのuid取得
           const db = getFirestore();
+          const storage = getStorage();
           const docSnap = await getDoc(doc(db, "uid_to_num", uid));
           if (docSnap.exists()) {
             this.userNum = docSnap.data().num;  // ユーザの連番取得
           } else {
             console.log("No such document.");
           }
+          const listRef = ref(storage, "/" + this.userNum); //ユーザーイメージの取得
+          console.log("test", this.userNum);
+          listAll(listRef)
+            .then((res) => {
+              console.log(res.items);
+              for (var i = 0; res.items.length > i; i++) {
+                console.log(res.items[i].name);
+                const imgName = res.items[i].name.split(".")[0];
+                if (imgName == "Header") {
+                  getDownloadURL(ref(storage, this.userNum + "/" + res.items[i].name))
+                    .then((url) => {
+                      this.headerUrl = url;
+                    })
+                    .catch((error) => {
+                      // Handle any errors
+                    });
+                } else if (imgName == "Icon") {
+                  getDownloadURL(ref(storage, this.userNum + "/" + res.items[i].name))
+                    .then((url) => {
+                      this.iconUrl = url;
+                    })
+                    .catch((error) => {
+                      // Handle any errors
+                    });
+                }
+              }
+            })
+            .catch((error) => {
+              // Uh-oh, an error occurred!
+            });
           const docSnapName = await getDoc(doc(db, "users", this.userNum));
           if (docSnapName.exists()) {
             const user = docSnapName.data();

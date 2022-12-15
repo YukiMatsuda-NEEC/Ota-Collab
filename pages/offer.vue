@@ -5,8 +5,8 @@
       <!-- 承認待ち -->
     </header>
     <section class="mode">
-      <button @click="change1" v-if="(displayType !== 1)">受信済み</button>
-      <button @click="change1" v-if="(displayType == 1)" class="button_selected">受信済み</button>
+      <button @click="change1" v-if="(displayType !== 1)">受信箱</button>
+      <button @click="change1" v-if="(displayType == 1)" class="button_selected">受信箱</button>
       <button @click="change2" v-if="(displayType !== 2)">オススメ</button>
       <button @click="change2" v-if="(displayType == 2)" class="button_selected">オススメ</button>
       <button @click="change3" v-if="(displayType !== 3)">送信済み</button>
@@ -14,8 +14,8 @@
     </section>
 
     <div v-if="(displayType == 1)">
-      <h3 v-if="checkWaitData[0]" class="connecting">通信中...</h3>
-      <h3 v-if="!checkWaitData[0] & (offersReceived.length == 0)" class="connecting">オファーが来るのを待ちましょう</h3>
+      <h3 v-if="waitReceived" class="connecting">通信中...</h3>
+      <h3 v-if="(!waitReceived & (offersReceived.length == 0))" class="connecting">オファーが来るのを待ちましょう</h3>
       <div v-for="offerReceived in offersReceived">
         <div @click="openReceivedProfile(offerReceived.userNum, offerReceived.offerID, offerReceived.is_succeeded)">
           <OfferCard :offerReceived="offerReceived" />
@@ -24,7 +24,8 @@
     </div>  
 
     <div v-if="(displayType == 2)">
-      <h3 v-if="checkWaitData[1]" class="connecting">通信中...</h3>
+      <h3 v-if="waitRecommend" class="connecting">通信中...</h3>
+      <h3 v-if="(!waitRecommend & (recommends.length == 0))" class="connecting">オススメがありません</h3>
       <div v-for="recommend in recommends">
         <div @click="openRecommendProfile(recommend.userNum)">
           <recommendCard :recommend="recommend" />
@@ -33,8 +34,8 @@
     </div>
 
     <div v-if="(displayType == 3)">
-      <h3 v-if="checkWaitData[2]" class="connecting">通信中...</h3>
-      <h3 v-if="(!checkWaitData[2] & (offersSubmitted.length == 0))" class="connecting">返信を待ちましょう</h3>
+      <h3 v-if="waitSubmitted" class="connecting">通信中...</h3>
+      <h3 v-if="(!waitSubmitted & (offersSubmitted.length == 0))" class="connecting">返信を待ちましょう</h3>
       <div v-for="offerSubmitted in offersSubmitted">
         <div @click="openSubmittedProfile(offerSubmitted.userNum, offerSubmitted.offerID, offerSubmitted.is_succeeded)">
           <replyWait :offerSubmitted="offerSubmitted" />
@@ -68,11 +69,11 @@
 section button {
   display: inline-block;
   font-size: 14px;
+  border-radius: 5px;
 }
 
 .button_selected {
   background-color: lightgreen;
-  border: 1px solid black;
 } 
 
 header {
@@ -102,8 +103,10 @@ export default {
     return {
       day: 26,
       userName: "田中",
-      checkWaitData: [true, true, true],
-      displayType: 1,
+      waitReceived: true,
+      waitRecommend: true,
+      waitSubmitted: true,
+      displayType: 2,
       userNum: "",
       recommends: [],
       offersSubmitted: [],
@@ -169,7 +172,7 @@ export default {
               this.offersReceived.push(offerData);
             };
           });
-          this.checkWaitData[0] = false;
+          this.waitReceived = false;
         }
       });
     },
@@ -187,14 +190,25 @@ export default {
           } else {
             console.log("No such document.");
           }
+          const hiddenList = [];  // オススメに表示しない相手のリスト
+          const querySnapshot = await getDocs(collection(db, "offers"));
+          querySnapshot.forEach(async (doc) => {
+            if (doc.data().from == this.userNum) {
+              hiddenList.push(doc.data().to);
+            } else if (doc.data().to == this.userNum) {
+              hiddenList.push(doc.data().from);
+            }
+          });
           try {
             const data = await this.$axios.$get(`/matching/${this.userNum}`);
             console.log("おすすめ："+data.offers);  /////////////////////
             data.offers.forEach(async (offerNum) => {
-              const offerData = await this.getUserData(String(offerNum));
-              this.recommends.push(offerData);
+              if (hiddenList.indexOf(String(offerNum)) === -1) {
+                const offerData = await this.getUserData(String(offerNum));
+                this.recommends.push(offerData);
+              }
             });
-            this.checkWaitData[1] = false;
+            this.waitRecommend = false;
           } catch (e) {
             console.error(e);
           }
@@ -225,7 +239,7 @@ export default {
             offerData["is_rejected"] = doc.data().is_rejected;
             this.offersSubmitted.push(offerData);
           });
-          this.checkWaitData[2] = false;
+          this.waitSubmitted = false;
         }
       });
     },
