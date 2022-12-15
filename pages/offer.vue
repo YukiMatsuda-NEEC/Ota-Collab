@@ -5,8 +5,8 @@
       <!-- 承認待ち -->
     </header>
     <section class="mode">
-      <button @click="change1" v-if="(displayType !== 1)">受信済み</button>
-      <button @click="change1" v-if="(displayType == 1)" class="button_selected">受信済み</button>
+      <button @click="change1" v-if="(displayType !== 1)">受信箱</button>
+      <button @click="change1" v-if="(displayType == 1)" class="button_selected">受信箱</button>
       <button @click="change2" v-if="(displayType !== 2)">オススメ</button>
       <button @click="change2" v-if="(displayType == 2)" class="button_selected">オススメ</button>
       <button @click="change3" v-if="(displayType !== 3)">送信済み</button>

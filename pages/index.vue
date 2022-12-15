@@ -6,26 +6,12 @@
     </header>
     <section class="header-imgs">
       <img
-        v-if="!this.headerUrl"
-        src="~/assets/image/sample-image/placeholder.png"
+        :src="this.headerUrl ? this.headerUrl : require('~/assets/image/sample-image/placeholder.png')"
         alt="ヘッダーイメージ"
         class="header-img"
       />
       <img
-        v-if="this.headerUrl"
-        :src="this.headerUrl"
-        alt="ヘッダーイメージ"
-        class="header-img"
-      />
-      <img
-        v-if="!this.iconUrl"
-        src="~/assets/image/sample-image/placeholder.png"
-        alt="ヘッダーアイコン"
-        class="header-icon"
-      />
-      <img
-        v-if="this.iconUrl"
-        :src="this.iconUrl"
+        :src="this.iconUrl ? this.iconUrl : require('~/assets/image/sample-image/placeholder.png')"
         alt="ヘッダーアイコン"
         class="header-icon"
       />
