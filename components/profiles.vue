@@ -171,6 +171,16 @@
 
   <section class="profiles" v-else>
     <div class="profile">
+      <Title> ヘッダー画像 </Title>
+      <!-- <otaInput @change="onHeaderUploaded()" type="file" /> -->
+      <input type="file" @change="onHeaderUploaded" />
+    </div>
+    <div class="profile">
+      <Title> アイコン画像 </Title>
+      <!-- <otaInput @change="onIconUploaded()" type="file" /> -->
+      <input type="file" @change="onIconUploaded" />
+    </div>
+    <div class="profile">
       <Title> コラボ願望 </Title>
       <!-- <otaInput v-model="message" :isTextarea="true" /> -->
       <textarea v-model="message"></textarea>
@@ -331,9 +341,9 @@
       </div>
     </div>
     <div class="profile">
-      <Title> Line Qrコード </Title>
-      <!-- <otaInput @change="onImageUploaded()" type="file" /> -->
-      <input type="file" @change="onImageUploaded" />
+      <Title> LINE QRコード </Title>
+      <!-- <otaInput @change="onQrUploaded()" type="file" /> -->
+      <input type="file" @change="onQrUploaded" />
       <section>
         <!-- <ota-Button @click="" buttonStyle="guideline">
           ガイドライン
@@ -382,17 +392,28 @@ export default {
     this.getData();
   },
   methods: {
-    async onImageUploaded(e) {
-      //画像のファイルを取得
+    onHeaderUploaded(e) {
+      //ヘッダー画像のファイルを取得
       const image = e.target.files[0];
-      this.uploadImage(image, image.type.split("/")[1]);
+      this.uploadImage(image, image.type.split("/")[1], 0);
     },
-    uploadImage(url, type) {
+    onIconUploaded(e) {
+      //アイコン画像のファイルを取得
+      const image = e.target.files[0];
+      this.uploadImage(image, image.type.split("/")[1], 1);
+    },
+    onQrUploaded(e) {
+      //QR画像のファイルを取得
+      const image = e.target.files[0];
+      this.uploadImage(image, image.type.split("/")[1], 2);
+    },
+    uploadImage(url, type, mode) {
       //引数で取得した画像ファイルを0/icon.pngにアップロード
       //TODO:画像の形式を取得して画像の拡張子を変える
       console.log(this.userNum);
       const storage = getStorage();
-      const storageRef = ref(storage, this.userNum + "/QR." + type);
+      const modeArray = ["/Header.", "/Icon.", "/QR."];
+      const storageRef = ref(storage, this.userNum + modeArray[mode] + type);
       uploadBytes(storageRef, url).then((snapshot) => {
         console.log("Uploaded a blob or file!");
       });
@@ -535,6 +556,7 @@ export default {
         unit_price: this.issues.includes("13"),
       });
       alert("編集を保存しました。");
+      this.getData();
       this.isEditing = !this.isEditing;
     },
     // QRコード、ボタンの表示切り替え
@@ -573,7 +595,8 @@ input {
 }
 textarea {
   resize: vertical;
-  width: 100%;
+  width: 99%;
+  padding-right: 0;
   height: 60px;
 }
 input,
