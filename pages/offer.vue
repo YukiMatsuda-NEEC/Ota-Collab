@@ -200,7 +200,10 @@ export default {
             }
           });
           try {
-            const data = await this.$axios.$get(`/matching/${this.userNum}`);
+            const data = await this.$axios.$get(`/matching/${this.userNum}`,
+              { header: {'Content-Type': 'application/json'}},
+              { header: {'Access-Control-Allow-Origin': '*'}}
+            );
             console.log("おすすめ："+data.offers);  /////////////////////
             data.offers.forEach(async (offerNum) => {
               if (hiddenList.indexOf(String(offerNum)) === -1) {
