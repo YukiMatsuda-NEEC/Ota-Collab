@@ -1,5 +1,5 @@
 <template>
-  <section class="profiles" v-if="isEditing">
+  <section class="profiles" v-if="isEditingChild">
     <div class="profile">
       <Title> コラボ願望 </Title>
       {{ message }}
@@ -353,7 +353,7 @@
 
     <div class="profile">
       <section>
-        <ota-Button @click="updateData" buttonStyle="save"> 保存 </ota-Button>
+        <ota-Button @click="updateData" buttonStyle="save" id="saveBtn"> 保存 </ota-Button>
         <ota-Button @click="getData" buttonStyle="cancel">
           キャンセル
         </ota-Button>
@@ -364,7 +364,7 @@
 <script>
 import Title from "~/components/Title.vue";
 import otaInput from "~/components/otaInput.vue";
-import { getFips } from "crypto";
+// import { getFips } from "crypto";
 import { getFirestore, getDoc, updateDoc, doc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
@@ -383,6 +383,41 @@ export default {
       type: Boolean,
       required: false,
       default: false,
+    },
+  },
+  computed: {
+    // 定義した変数に変更があれば親コンポーネントに伝える
+    isEditingChild:{
+      get(){
+        return this.isEditing;
+      },
+      set(newVal){
+        this.$emit("changeIsEditing", newVal)
+      }
+    },
+    headerUrlChild:{
+      get(){
+        return "";
+      },
+      set(newVal){
+        this.$emit("changeHeaderUrl", newVal)
+      }
+    },
+    iconUrlChild:{
+      get(){
+        return "";
+      },
+      set(newVal){
+        this.$emit("changeIconUrl", newVal)
+      }
+    },
+    shop_nameChild:{
+      get(){
+        return "";
+      },
+      set(newVal){
+        this.$emit("changeShopname", newVal)
+      }
     },
   },
   components: {
@@ -405,24 +440,16 @@ export default {
       //QR画像のファイルを取得
       this.img_tmp[2] = e.target.files[0];
     },
-    uploadImage(url, mode) {
+    async uploadImage(url, mode) {  //（mode 0:ヘッダー画像, 1:アイコン画像, 2:QRコード）
       //引数で取得した画像ファイルを0/icon.pngにアップロード
       //TODO:画像の形式を取得して画像の拡張子を変える
-      const storage = getStorage();
-      this.deleteImg(mode);  // 画像が登録されていれば削除
+      let filePass = "";
       const modeArray = ["/Header.", "/Icon.", "/QR."];
       const type = url.type.split("/")[1];
-      const storageRef = ref(storage, this.userNum + modeArray[mode] + type);
-      uploadBytes(storageRef, url).then((snapshot) => {
-        console.log("Uploaded a blob or file!");
-      });
-    },
-    // 画像登録されていれば削除する（mode 0:ヘッダー画像, 1:アイコン画像, 2:QRコード）
-    deleteImg(mode) {
-      let filePass = "";
       const storage = getStorage();
+      const storageRef = ref(storage, this.userNum + modeArray[mode] + type);
       const listRef = ref(storage, "/" + this.userNum); 
-      listAll(listRef).then((res) => {
+      await listAll(listRef).then(async (res) => {
         for (var i = 0; res.items.length > i; i++) {
           const imgName = res.items[i].name.split(".")[0];
           if (mode == 0 && imgName == "Header") {
@@ -433,13 +460,23 @@ export default {
             filePass = this.userNum + "/" + res.items[i].name;
           }
         }
+      });
+      if (filePass != "") {  // 画像が登録されていれば削除してから登録
         const desertRef = ref(storage, filePass);
-        deleteObject(desertRef).then(() => {
-          // File deleted successfully
+        await deleteObject(desertRef).then(async () => {
+          console.log("Deleted a img "+mode);
+          await uploadBytes(storageRef, url).then((snapshot) => {
+            console.log("Uploaded a blob or file! "+mode);
+          });
         }).catch((error) => {
           console.error(error);
+          return false;
         });
-      });
+      } else {  // 画像が登録されてなければそのまま登録
+        await uploadBytes(storageRef, url).then((snapshot) => {
+          console.log("Uploaded a blob or file! "+mode);
+        });
+      }
     },
     // データの取得
     getData() {
@@ -463,6 +500,7 @@ export default {
             const user = docSnapProfile.data(); // ユーザ情報の取得
             this.message = user.message;
             this.shop_name = user.shop_name;
+            this.shop_nameChild = user.shop_name;
             this.representative = user.representative;
             this.industry = user.industry;
             this.address = user.address;
@@ -479,14 +517,25 @@ export default {
               console.log(res.items);
               for (var i = 0; res.items.length > i; i++) {
                 console.log(res.items[i].name);
-                if (res.items[i].name.split(".")[0] == "QR") {
-                  const pathReference = ref(
-                    storage,
-                    this.userNum + "/" + res.items[i].name
-                  );
-                  getDownloadURL(
-                    ref(storage, this.userNum + "/" + res.items[i].name)
-                  )
+                const imgName = res.items[i].name.split(".")[0];
+                if (imgName == "Header") {
+                  getDownloadURL(ref(storage, this.userNum + "/" + res.items[i].name))
+                    .then((url) => {
+                      this.headerUrlChild = url;
+                    })
+                    .catch((error) => {
+                      // Handle any errors
+                    });
+                } else if (imgName == "Icon") {
+                  getDownloadURL(ref(storage, this.userNum + "/" + res.items[i].name))
+                    .then((url) => {
+                      this.iconUrlChild = url;
+                    })
+                    .catch((error) => {
+                      // Handle any errors
+                    });
+                } else if (imgName == "QR") {
+                  getDownloadURL(ref(storage, this.userNum + "/" + res.items[i].name))
                     .then((url) => {
                       this.QrUrl = url;
                     })
@@ -552,6 +601,9 @@ export default {
     },
     // 編集の保存
     async updateData() {
+      // 処理が終わるまでボタンを無効にする
+      const saveBtn = document.getElementById("saveBtn");
+      saveBtn.disabled = true;
       const db = getFirestore();
       await updateDoc(doc(db, "users", this.userNum), {
         message: this.message,
@@ -580,12 +632,15 @@ export default {
       });
       for (let i=0; i<3; i++) {
         if (this.img_tmp[i]) {
-          this.uploadImage(this.img_tmp[i], i);
+          await this.uploadImage(this.img_tmp[i], i);
         }
       }
+      this.img_tmp = [];
       alert("編集を保存しました。");
       this.getData();
-      this.isEditing = !this.isEditing;
+      this.isEditingChild = !this.isEditingChild;
+      // 処理が終わったらボタンを有効にする
+      saveBtn.disabled = false;
     },
     // QRコード、ボタンの表示切り替え
     toggle: function () {
