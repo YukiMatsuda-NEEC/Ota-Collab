@@ -480,12 +480,11 @@ export default {
     },
     // データの取得
     getData() {
-      let uid = ""; // テスト中(初期値決める)
       const auth = getAuth();
       console.log(auth);
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          uid = user.uid; // ユーザのuid取得
+          const uid = user.uid; // ユーザのuid取得
           console.log(uid);
           const db = getFirestore();
           const storage = getStorage();
@@ -518,29 +517,30 @@ export default {
               for (var i = 0; res.items.length > i; i++) {
                 console.log(res.items[i].name);
                 const imgName = res.items[i].name.split(".")[0];
+                const filePass = this.userNum + "/" + res.items[i].name;
                 if (imgName == "Header") {
-                  getDownloadURL(ref(storage, this.userNum + "/" + res.items[i].name))
+                  getDownloadURL(ref(storage, filePass))
                     .then((url) => {
                       this.headerUrlChild = url;
                     })
                     .catch((error) => {
-                      // Handle any errors
+                      console.error(error);
                     });
                 } else if (imgName == "Icon") {
-                  getDownloadURL(ref(storage, this.userNum + "/" + res.items[i].name))
+                  getDownloadURL(ref(storage, filePass))
                     .then((url) => {
                       this.iconUrlChild = url;
                     })
                     .catch((error) => {
-                      // Handle any errors
+                      console.error(error);
                     });
                 } else if (imgName == "QR") {
-                  getDownloadURL(ref(storage, this.userNum + "/" + res.items[i].name))
+                  getDownloadURL(ref(storage, filePass))
                     .then((url) => {
                       this.QrUrl = url;
                     })
                     .catch((error) => {
-                      // Handle any errors
+                      console.error(error);
                     });
                 }
               }
