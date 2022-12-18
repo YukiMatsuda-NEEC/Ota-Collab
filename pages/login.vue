@@ -111,11 +111,18 @@ export default {
           console.log(user.uid);
           // 連番の最後を取得
           let db = getFirestore();
-          const data = await this.$axios.$get('/getLastNum',
-            { header: {'Content-Type': 'application/json'}},
-            { header: {'Access-Control-Allow-Origin': '*'}}
-          );
-          const userNum = data.lastNum;
+          // const data = await this.$axios.$get('/getLastNum');
+          // const userNum = data.lastNum;
+          let lastNum = 0;
+          const docSnap = await getDoc(doc(db, "last_num", "7jLx5j1Ng3nIPmjGiced"));
+          if (docSnap.exists()) {
+            lastNum = docSnap.data().num;  // ユーザの連番取得
+            await updateDoc(doc(db, "last_num", "7jLx5j1Ng3nIPmjGiced"), {
+              lastNum: lastNum + 1,
+            });
+          }
+          const userNum = String(lastNum);
+
           // uidと連番の紐づけを作成
           await setDoc(doc(db, "uid_to_num", user.uid), {
             num: userNum,

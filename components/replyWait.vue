@@ -110,7 +110,7 @@ export default {
                 this.iconUrl = url;
               })
               .catch((error) => {
-                // Handle any errors
+                console.error(error);
               });
           }
         }

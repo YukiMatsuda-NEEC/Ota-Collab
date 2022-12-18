@@ -255,36 +255,31 @@ export default {
   methods: {
     // オファーから移動してきたときのデータの取得
     async getData() {
+      const userNum = this.$route.params.userNum;
       const storage = getStorage();
-      const listRef = ref(storage, "/" + this.$route.params.userNum); //ユーザーイメージの取得
-      console.log("test", this.$route.params.userNum);
+      const listRef = ref(storage, "/" + userNum); //ユーザーイメージの取得
       listAll(listRef).then((res) => {
-        console.log(res.items);
         for (var i = 0; res.items.length > i; i++) {
-          console.log(res.items[i].name);
           const imgName = res.items[i].name.split(".")[0];
+          const filePass = userNum + "/" + res.items[i].name;
           if (imgName == "Header") {
-            getDownloadURL(ref(storage, this.$route.params.userNum + "/" + res.items[i].name))
+            getDownloadURL(ref(storage, filePass))
               .then((url) => {
                 this.headerUrl = url;
               })
               .catch((error) => {
-                // Handle any errors
+                console.error(error);
               });
           } else if (imgName == "Icon") {
-            getDownloadURL(ref(storage, this.$route.params.userNum + "/" + res.items[i].name))
+            getDownloadURL(ref(storage, filePass))
               .then((url) => {
                 this.iconUrl = url;
               })
               .catch((error) => {
-                // Handle any errors
+                console.error(error);
               });
           } else if (imgName == "QR") {
-            const pathReference = ref(
-              storage,
-              this.$route.params.userNum + "/" + res.items[i].name
-            );
-            getDownloadURL(ref(storage, this.$route.params.userNum + "/" + res.items[i].name))
+            getDownloadURL(ref(storage, filePass))
               .then((url) => {
                 this.QrUrl = url;
               })
@@ -296,7 +291,7 @@ export default {
       });
       const db = getFirestore();
       const docSnapProfile = await getDoc(
-        doc(db, "users", this.$route.params.userNum)
+        doc(db, "users", userNum)
       );
       if (docSnapProfile.exists()) {
         const user = docSnapProfile.data(); // ユーザ情報の取得
@@ -312,7 +307,7 @@ export default {
         console.log("No such document.");
       }
       const docSnapIssues = await getDoc(
-        doc(db, "ManagementIssues", this.$route.params.userNum)
+        doc(db, "ManagementIssues", userNum)
       );
       if (docSnapIssues.exists()) {
         const issuesData = docSnapIssues.data(); // ユーザの経営課題の取得
@@ -363,7 +358,7 @@ export default {
     checkIsSucceeded(){
       if(this.$route.params.is_succeeded) { this.show = true };
     },
-    // QRコード、ボタンの表示切り替え
+    // 興味あるボタンの機能
     async interestOffer() {
       this.show = true;
       const db = getFirestore();
@@ -379,13 +374,12 @@ export default {
       });
       this.returnBeforePage();
     },
-    // おすすめからオファーを出す
+    // オファー送信ボタンの機能
     submitOffer() {
-      let uid = ""; // テスト中(初期値決める)
       const auth = getAuth();
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          uid = user.uid; // ユーザのuid取得
+          const uid = user.uid; // ユーザのuid取得
           const db = getFirestore();
           const docSnap = await getDoc(doc(db, "uid_to_num", uid));
           if (docSnap.exists()) {
