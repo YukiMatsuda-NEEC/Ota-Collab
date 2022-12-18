@@ -184,11 +184,7 @@ export default {
       });
 
       // try {
-      //   const data = await this.$axios.$get(`/matching/${this.userNum}`,
-      //   { header: {'Content-Type': 'application/json'} },
-      //   { header: {'Access-Control-Allow-Origin': 'https://api-rose-beta.vercel.app'} },
-      //   { header: {'Vary': 'Origin'} }
-      // );
+      //   const data = await this.$axios.$get(`/matching/${this.userNum}`);
       //   console.log("おすすめ："+data.offers);  ///// 削除予定
       //   data.offers.forEach(async (offerNum) => {
       //     if (hiddenList.indexOf(String(offerNum)) === -1) {
