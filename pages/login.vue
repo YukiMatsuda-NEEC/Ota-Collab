@@ -122,6 +122,7 @@ export default {
             });
           }
           const userNum = String(lastNum);
+
           // uidと連番の紐づけを作成
           await setDoc(doc(db, "uid_to_num", user.uid), {
             num: userNum,
