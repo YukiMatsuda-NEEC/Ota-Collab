@@ -365,7 +365,7 @@
 import Title from "~/components/Title.vue";
 import otaInput from "~/components/otaInput.vue";
 // import { getFips } from "crypto";
-import { getFirestore, getDoc, updateDoc, doc } from "firebase/firestore";
+import { getFirestore, getDoc, updateDoc, doc, getDocs, query, collection, where } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
   getStorage,
@@ -443,21 +443,23 @@ export default {
     async uploadImage(url, mode) {  //（mode 0:ヘッダー画像, 1:アイコン画像, 2:QRコード）
       //引数で取得した画像ファイルを0/icon.pngにアップロード
       //TODO:画像の形式を取得して画像の拡張子を変える
+
+      // テスト中ここから ///////////
       let filePass = "";
       const modeArray = ["/Header.", "/Icon.", "/QR."];
       const type = url.type.split("/")[1];
       const storage = getStorage();
-      const storageRef = ref(storage, this.userNum + modeArray[mode] + type);
-      const listRef = ref(storage, "/" + this.userNum); 
+      const storageRef = ref(storage, this.uid + modeArray[mode] + type);
+      const listRef = ref(storage, "/" + this.uid); 
       await listAll(listRef).then(async (res) => {
         for (var i = 0; res.items.length > i; i++) {
           const imgName = res.items[i].name.split(".")[0];
           if (mode == 0 && imgName == "Header") {
-            filePass = this.userNum + "/" + res.items[i].name;
+            filePass = this.uid + "/" + res.items[i].name;
           } else if (mode == 1 && imgName == "Icon") {
-            filePass = this.userNum + "/" + res.items[i].name;
+            filePass = this.uid + "/" + res.items[i].name;
           } else if (mode == 2 && imgName == "QR") {
-            filePass = this.userNum + "/" + res.items[i].name;
+            filePass = this.uid + "/" + res.items[i].name;
           }
         }
       });
@@ -477,47 +479,61 @@ export default {
           console.log("Uploaded a blob or file! "+mode);
         });
       }
+      // テスト中ここまで ///////////
+
+      // let filePass = "";
+      // const modeArray = ["/Header.", "/Icon.", "/QR."];
+      // const type = url.type.split("/")[1];
+      // const storage = getStorage();
+      // const storageRef = ref(storage, this.userNum + modeArray[mode] + type);
+      // const listRef = ref(storage, "/" + this.userNum); 
+      // await listAll(listRef).then(async (res) => {
+      //   for (var i = 0; res.items.length > i; i++) {
+      //     const imgName = res.items[i].name.split(".")[0];
+      //     if (mode == 0 && imgName == "Header") {
+      //       filePass = this.userNum + "/" + res.items[i].name;
+      //     } else if (mode == 1 && imgName == "Icon") {
+      //       filePass = this.userNum + "/" + res.items[i].name;
+      //     } else if (mode == 2 && imgName == "QR") {
+      //       filePass = this.userNum + "/" + res.items[i].name;
+      //     }
+      //   }
+      // });
+      // if (filePass != "") {  // 画像が登録されていれば削除してから登録
+      //   const desertRef = ref(storage, filePass);
+      //   await deleteObject(desertRef).then(async () => {
+      //     console.log("Deleted a img "+mode);
+      //     await uploadBytes(storageRef, url).then((snapshot) => {
+      //       console.log("Uploaded a blob or file! "+mode);
+      //     });
+      //   }).catch((error) => {
+      //     console.error(error);
+      //     return false;
+      //   });
+      // } else {  // 画像が登録されてなければそのまま登録
+      //   await uploadBytes(storageRef, url).then((snapshot) => {
+      //     console.log("Uploaded a blob or file! "+mode);
+      //   });
+      // }
     },
     // データの取得
     getData() {
       const auth = getAuth();
-      console.log(auth);
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          const uid = user.uid; // ユーザのuid取得
-          console.log(uid);
+
+          // テスト中ここから ///////////
+          this.uid = user.uid;
+          this.issues = []; // ユーザの経営課題の初期化
           const db = getFirestore();
           const storage = getStorage();
-          const docSnap = await getDoc(doc(db, "uid_to_num", uid));
-          if (docSnap.exists()) {
-            this.userNum = docSnap.data().num; // ユーザの連番取得
-          } else {
-            console.log("No such document.");
-          }
-          const docSnapProfile = await getDoc(doc(db, "users", this.userNum));
-          if (docSnapProfile.exists()) {
-            const user = docSnapProfile.data(); // ユーザ情報の取得
-            this.message = user.message;
-            this.shop_name = user.shop_name;
-            this.shop_nameChild = user.shop_name;
-            this.representative = user.representative;
-            this.industry = user.industry;
-            this.address = user.address;
-            this.line_administrator = user.line_administrator;
-            this.line_furigana = user.line_furigana;
-            this.introduction = user.introduction;
-          } else {
-            console.log("No such document.");
-          }
-          const listRef = ref(storage, "/" + this.userNum); //ユーザーイメージの取得
-          console.log("test", this.userNum);
+          const listRef = ref(storage, "/" + this.uid); //ユーザーイメージの取得
           listAll(listRef)
             .then((res) => {
-              console.log(res.items);
               for (var i = 0; res.items.length > i; i++) {
                 console.log(res.items[i].name);
                 const imgName = res.items[i].name.split(".")[0];
-                const filePass = this.userNum + "/" + res.items[i].name;
+                const filePass = this.uid + "/" + res.items[i].name;
                 if (imgName == "Header") {
                   getDownloadURL(ref(storage, filePass))
                     .then((url) => {
@@ -548,54 +564,146 @@ export default {
             .catch((error) => {
               // Uh-oh, an error occurred!
             });
-          const docSnapIssues = await getDoc(
-            doc(db, "ManagementIssues", this.userNum)
-          );
-          if (docSnapIssues.exists()) {
-            this.issues = []; // ユーザの経営課題の初期化
-            const issuesData = docSnapIssues.data(); // ユーザの経営課題の取得
-            if (issuesData.attracting_customers) {
-              this.issues.push("1");
-            }
-            if (issuesData.awareness) {
-              this.issues.push("2");
-            }
-            if (issuesData.branding) {
-              this.issues.push("3");
-            }
-            if (issuesData.employee_training) {
-              this.issues.push("4");
-            }
-            if (issuesData.expansion) {
-              this.issues.push("5");
-            }
-            if (issuesData.frequency) {
-              this.issues.push("6");
-            }
-            if (issuesData.human_resources) {
-              this.issues.push("7");
-            }
-            if (issuesData.new_customers) {
-              this.issues.push("8");
-            }
-            if (issuesData.outflow) {
-              this.issues.push("9");
-            }
-            if (issuesData.purchases) {
-              this.issues.push("10");
-            }
-            if (issuesData.repeat_rate) {
-              this.issues.push("11");
-            }
-            if (issuesData.sales) {
-              this.issues.push("12");
-            }
-            if (issuesData.unit_price) {
-              this.issues.push("13");
-            }
-          } else {
-            console.log("No such document.");
-          }
+          const q = query(collection(db, "users_test"), where("uid", "==", this.uid));
+          const querySnapshot = await getDocs(q);
+          this.user_doc_id = querySnapshot.docs[0].id;
+          const userData = querySnapshot.docs[0].data();
+          this.message = userData.message;
+          this.shop_name = userData.shop_name;
+          this.shop_nameChild = userData.shop_name;
+          this.representative = userData.representative;
+          this.industry = userData.industry;
+          this.address = userData.address;
+          this.line_administrator = userData.line_administrator;
+          this.line_furigana = userData.line_furigana;
+          this.introduction = userData.introduction;
+          if (userData.attracting_customers) this.issues.push("1");
+          if (userData.awareness) this.issues.push("2");
+          if (userData.branding) this.issues.push("3");
+          if (userData.employee_training) this.issues.push("4");
+          if (userData.expansion) this.issues.push("5");
+          if (userData.frequency) this.issues.push("6");
+          if (userData.human_resources) this.issues.push("7");
+          if (userData.new_customers) this.issues.push("8");
+          if (userData.outflow) this.issues.push("9");
+          if (userData.purchases) this.issues.push("10");
+          if (userData.repeat_rate) this.issues.push("11");
+          if (userData.sales) this.issues.push("12");
+          if (userData.unit_price) this.issues.push("13");
+          // テスト中ここまで ///////////
+
+          // const uid = user.uid; // ユーザのuid取得
+          // console.log(uid);
+          // const db = getFirestore();
+          // const storage = getStorage();
+          // const docSnap = await getDoc(doc(db, "uid_to_num", uid));
+          // if (docSnap.exists()) {
+          //   this.userNum = docSnap.data().num; // ユーザの連番取得
+          // } else {
+          //   console.log("No such document.");
+          // }
+          // const docSnapProfile = await getDoc(doc(db, "users", this.userNum));
+          // if (docSnapProfile.exists()) {
+          //   const user = docSnapProfile.data(); // ユーザ情報の取得
+          //   this.message = user.message;
+          //   this.shop_name = user.shop_name;
+          //   this.shop_nameChild = user.shop_name;
+          //   this.representative = user.representative;
+          //   this.industry = user.industry;
+          //   this.address = user.address;
+          //   this.line_administrator = user.line_administrator;
+          //   this.line_furigana = user.line_furigana;
+          //   this.introduction = user.introduction;
+          // } else {
+          //   console.log("No such document.");
+          // }
+          // const listRef = ref(storage, "/" + this.userNum); //ユーザーイメージの取得
+          // console.log("test", this.userNum);
+          // listAll(listRef)
+          //   .then((res) => {
+          //     console.log(res.items);
+          //     for (var i = 0; res.items.length > i; i++) {
+          //       console.log(res.items[i].name);
+          //       const imgName = res.items[i].name.split(".")[0];
+          //       const filePass = this.userNum + "/" + res.items[i].name;
+          //       if (imgName == "Header") {
+          //         getDownloadURL(ref(storage, filePass))
+          //           .then((url) => {
+          //             this.headerUrlChild = url;
+          //           })
+          //           .catch((error) => {
+          //             console.error(error);
+          //           });
+          //       } else if (imgName == "Icon") {
+          //         getDownloadURL(ref(storage, filePass))
+          //           .then((url) => {
+          //             this.iconUrlChild = url;
+          //           })
+          //           .catch((error) => {
+          //             console.error(error);
+          //           });
+          //       } else if (imgName == "QR") {
+          //         getDownloadURL(ref(storage, filePass))
+          //           .then((url) => {
+          //             this.QrUrl = url;
+          //           })
+          //           .catch((error) => {
+          //             console.error(error);
+          //           });
+          //       }
+          //     }
+          //   })
+          //   .catch((error) => {
+          //     // Uh-oh, an error occurred!
+          //   });
+          // const docSnapIssues = await getDoc(
+          //   doc(db, "ManagementIssues", this.userNum)
+          // );
+          // if (docSnapIssues.exists()) {
+          //   this.issues = []; // ユーザの経営課題の初期化
+          //   const issuesData = docSnapIssues.data(); // ユーザの経営課題の取得
+          //   if (issuesData.attracting_customers) {
+          //     this.issues.push("1");
+          //   }
+          //   if (issuesData.awareness) {
+          //     this.issues.push("2");
+          //   }
+          //   if (issuesData.branding) {
+          //     this.issues.push("3");
+          //   }
+          //   if (issuesData.employee_training) {
+          //     this.issues.push("4");
+          //   }
+          //   if (issuesData.expansion) {
+          //     this.issues.push("5");
+          //   }
+          //   if (issuesData.frequency) {
+          //     this.issues.push("6");
+          //   }
+          //   if (issuesData.human_resources) {
+          //     this.issues.push("7");
+          //   }
+          //   if (issuesData.new_customers) {
+          //     this.issues.push("8");
+          //   }
+          //   if (issuesData.outflow) {
+          //     this.issues.push("9");
+          //   }
+          //   if (issuesData.purchases) {
+          //     this.issues.push("10");
+          //   }
+          //   if (issuesData.repeat_rate) {
+          //     this.issues.push("11");
+          //   }
+          //   if (issuesData.sales) {
+          //     this.issues.push("12");
+          //   }
+          //   if (issuesData.unit_price) {
+          //     this.issues.push("13");
+          //   }
+          // } else {
+          //   console.log("No such document.");
+          // }
         }
       });
     },
@@ -605,7 +713,9 @@ export default {
       const saveBtn = document.getElementById("saveBtn");
       saveBtn.disabled = true;
       const db = getFirestore();
-      await updateDoc(doc(db, "users", this.userNum), {
+
+      // テスト中ここから ///////////
+      await updateDoc(doc(db, "users_test", this.user_doc_id), {
         message: this.message,
         shop_name: this.shop_name,
         representative: this.representative,
@@ -614,8 +724,6 @@ export default {
         line_administrator: this.line_administrator,
         line_furigana: this.line_furigana,
         introduction: this.introduction,
-      });
-      await updateDoc(doc(db, "ManagementIssues", this.userNum), {
         attracting_customers: this.issues.includes("1"),
         awareness: this.issues.includes("2"),
         branding: this.issues.includes("3"),
@@ -630,6 +738,34 @@ export default {
         sales: this.issues.includes("12"),
         unit_price: this.issues.includes("13"),
       });
+      // テスト中ここまで ///////////
+
+      // await updateDoc(doc(db, "users", this.userNum), {
+      //   message: this.message,
+      //   shop_name: this.shop_name,
+      //   representative: this.representative,
+      //   industry: this.industry,
+      //   address: this.address,
+      //   line_administrator: this.line_administrator,
+      //   line_furigana: this.line_furigana,
+      //   introduction: this.introduction,
+      // });
+      // await updateDoc(doc(db, "ManagementIssues", this.userNum), {
+      //   attracting_customers: this.issues.includes("1"),
+      //   awareness: this.issues.includes("2"),
+      //   branding: this.issues.includes("3"),
+      //   employee_training: this.issues.includes("4"),
+      //   expansion: this.issues.includes("5"),
+      //   frequency: this.issues.includes("6"),
+      //   human_resources: this.issues.includes("7"),
+      //   new_customers: this.issues.includes("8"),
+      //   outflow: this.issues.includes("9"),
+      //   purchases: this.issues.includes("10"),
+      //   repeat_rate: this.issues.includes("11"),
+      //   sales: this.issues.includes("12"),
+      //   unit_price: this.issues.includes("13"),
+      // });
+
       for (let i=0; i<3; i++) {
         if (this.img_tmp[i]) {
           await this.uploadImage(this.img_tmp[i], i);
@@ -653,7 +789,9 @@ export default {
       userName: "田中",
       isInputMode: false,
       show: false,
-      userNum: "",
+      uid: "",
+      user_doc_id: "",
+      // userNum: "",
       message: "",
       shop_name: "",
       representative: "",

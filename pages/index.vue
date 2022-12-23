@@ -87,7 +87,7 @@ export default {
       isEditing: false,
       // offers: [],
       // lastNum: "",
-      userNum: "",
+      // userNum: "",
       headerUrl: "",
       iconUrl: "",
     };
