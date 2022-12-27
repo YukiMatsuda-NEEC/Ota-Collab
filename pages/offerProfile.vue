@@ -282,7 +282,7 @@ export default {
         }
       });
       const db = getFirestore();
-      const q = query(collection(db, "users_test"), where("uid", "==", uid));
+      const q = query(collection(db, "users"), where("uid", "==", uid));
       const querySnapshot = await getDocs(q);
       const userData = querySnapshot.docs[0].data();
       this.message = userData.message;
@@ -334,16 +334,13 @@ export default {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
           this.uid = user.uid; // ユーザのuid取得
-          // const uid = user.uid; // ユーザのuid取得
           const db = getFirestore();
           await addDoc(collection(db, "offers_test"), {
             date: serverTimestamp(),
             from: this.uid,
-            // from: this.userNum,
             is_rejected: false,
             is_succeeded: false,
             to: this.$route.params.uid,
-            // to: this.$route.params.userNum,
           });
           alert("オファーを送信しました。");
           this.returnBeforePage();

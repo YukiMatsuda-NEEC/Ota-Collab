@@ -108,7 +108,7 @@ export default {
         .then(async (userCredential) => {
           const uid = userCredential.user.uid;
           const db = getFirestore();
-          await addDoc(collection(db, "users_test"), {
+          await addDoc(collection(db, "users"), {
             uid: uid,
             address: "",
             facebook: "",

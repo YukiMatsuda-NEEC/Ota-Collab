@@ -524,7 +524,7 @@ export default {
             .catch((error) => {
               // Uh-oh, an error occurred!
             });
-          const q = query(collection(db, "users_test"), where("uid", "==", this.uid));
+          const q = query(collection(db, "users"), where("uid", "==", this.uid));
           const querySnapshot = await getDocs(q);
           this.user_doc_id = querySnapshot.docs[0].id;
           const userData = querySnapshot.docs[0].data();
@@ -559,7 +559,7 @@ export default {
       const saveBtn = document.getElementById("saveBtn");
       saveBtn.disabled = true;
       const db = getFirestore();
-      await updateDoc(doc(db, "users_test", this.user_doc_id), {
+      await updateDoc(doc(db, "users", this.user_doc_id), {
         message: this.message,
         shop_name: this.shop_name,
         representative: this.representative,

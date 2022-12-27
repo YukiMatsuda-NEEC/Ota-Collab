@@ -12,8 +12,6 @@
       <button @click="change3" v-if="(displayType == 3)" class="button_selected">送信済み</button>
     </section>
 
-    <button @click="changeDataKiwotuketeosu">！！！注意！！！</button>
-
     <div v-if="(displayType == 1)">
       <h3 v-if="waitReceived" class="connecting">通信中...</h3>
       <h3 v-if="(!waitReceived & (offersReceived.length == 0))" class="connecting">オファーが来るのを待ちましょう</h3>
@@ -119,59 +117,6 @@ export default {
     this.checkDisplayType();
   },
   methods: {
-    // ！！テスト中！！データ書き換えなので気を付ける
-    async changeDataKiwotuketeosu() {
-      const db = getFirestore();
-      const q = query(collection(db, "uid_to_num"), where("num", "==", "1"));
-      const querySnapshot = await getDocs(q);
-      const uid = querySnapshot.docs[0].id;
-      
-      let userData = {};
-      const docSnap_user = await getDoc(doc(db, "users", "1"));
-      if (docSnap_user.exists()) {
-        userData = docSnap_user.data();
-      }
-
-      let issueData = {};
-      const docSnap_issue = await getDoc(doc(db, "ManagementIssues", "1"));
-      if (docSnap_issue.exists()) {
-        issueData = docSnap_issue.data();
-      }
-
-      // // 追加するときのみ
-      // await addDoc(collection(db, "users"), {
-      //   uid: uid,
-      //   address: userData.address,
-      //   facebook: userData.facebook,
-      //   industry: userData.industry,
-      //   instagram: userData.instagram,
-      //   introduction: userData.introduction,
-      //   line_administrator: userData.line_administrator,
-      //   line_furigana: userData.line_furigana,
-      //   message: userData.message,
-      //   representative: userData.representative,
-      //   shop_name: userData.shop_name,
-      //   twitter: userData.twitter,
-      //   will: userData.will,
-      //   attracting_customers: issueData.attracting_customers,
-      //   awareness: issueData.awareness,
-      //   branding: issueData.branding,
-      //   employee_training: issueData.employee_training,
-      //   expansion: issueData.expansion,
-      //   frequency: issueData.frequency,
-      //   human_resources: issueData.human_resources,
-      //   new_customers: issueData.new_customers,
-      //   outflow: issueData.outflow,
-      //   purchases: issueData.purchases,
-      //   repeat_rate: issueData.repeat_rate,
-      //   sales: issueData.sales,
-      //   unit_price: issueData.unit_price,
-      // });
-
-      console.log("ok");
-
-    },
-    // ！！テスト中！！ここまで
     change1() {
       this.displayType = 1;
     },
@@ -274,10 +219,10 @@ export default {
       let max_next_cnt = 0;
       let recommend_next = [];
       let recommend = [];
-      const q_login = query(collection(db, "users_test"), where("uid", "==", this.uid));
+      const q_login = query(collection(db, "users"), where("uid", "==", this.uid));
       const querySnapshot_login = await getDocs(q_login);
       loginUser = querySnapshot_login.docs[0].data();
-      const q = query(collection(db, "users_test"));
+      const q = query(collection(db, "users"));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach(async (doc) => {
         cnt = 0;
@@ -308,7 +253,7 @@ export default {
             max_next_cnt = cnt;
             recommend_next = [];
             recommend_next.push(compare.uid);
-          }  else if(cnt = max_next_cnt) {
+          }  else if(cnt == max_next_cnt) {
             recommend_next.push(compare.uid);
           }
         }
@@ -317,7 +262,7 @@ export default {
     },
     // 引数のuidのユーザ情報を取得（matching, getOffersSubmitted, getOffersReceivedで使用）
     async getUserData(db, uid) {
-      const q = query(collection(db, "users_test"), where("uid", "==", uid));
+      const q = query(collection(db, "users"), where("uid", "==", uid));
       const querySnapshot = await getDocs(q);
       const userData = querySnapshot.docs[0].data();
       userData["uid"] = uid;
