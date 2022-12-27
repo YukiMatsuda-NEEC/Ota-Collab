@@ -12,6 +12,8 @@
       <button @click="change3" v-if="(displayType == 3)" class="button_selected">送信済み</button>
     </section>
 
+    <button @click="changeDataKiwotuketeosu">！！！注意！！！</button>
+
     <div v-if="(displayType == 1)">
       <h3 v-if="waitReceived" class="connecting">通信中...</h3>
       <h3 v-if="(!waitReceived & (offersReceived.length == 0))" class="connecting">オファーが来るのを待ちましょう</h3>
@@ -88,7 +90,7 @@ header {
 import OfferCard from "~/components/OfferCard.vue";
 import recommendCard from "~/components/recommendCard.vue";
 import replyWait from "~/components/replyWait.vue";
-import { getFirestore, doc, getDoc, getDocs, query, collection, where } from "firebase/firestore";
+import { getFirestore, doc, getDoc, getDocs, query, collection, where, addDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default {
@@ -107,7 +109,6 @@ export default {
       waitSubmitted: true,
       displayType: 2,
       uid: "",
-      // userNum: "",
       recommends: [],
       offersSubmitted: [],
       offersReceived: [],
@@ -118,6 +119,59 @@ export default {
     this.checkDisplayType();
   },
   methods: {
+    // ！！テスト中！！データ書き換えなので気を付ける
+    async changeDataKiwotuketeosu() {
+      const db = getFirestore();
+      const q = query(collection(db, "uid_to_num"), where("num", "==", "1"));
+      const querySnapshot = await getDocs(q);
+      const uid = querySnapshot.docs[0].id;
+      
+      let userData = {};
+      const docSnap_user = await getDoc(doc(db, "users", "1"));
+      if (docSnap_user.exists()) {
+        userData = docSnap_user.data();
+      }
+
+      let issueData = {};
+      const docSnap_issue = await getDoc(doc(db, "ManagementIssues", "1"));
+      if (docSnap_issue.exists()) {
+        issueData = docSnap_issue.data();
+      }
+
+      // // 追加するときのみ
+      // await addDoc(collection(db, "users"), {
+      //   uid: uid,
+      //   address: userData.address,
+      //   facebook: userData.facebook,
+      //   industry: userData.industry,
+      //   instagram: userData.instagram,
+      //   introduction: userData.introduction,
+      //   line_administrator: userData.line_administrator,
+      //   line_furigana: userData.line_furigana,
+      //   message: userData.message,
+      //   representative: userData.representative,
+      //   shop_name: userData.shop_name,
+      //   twitter: userData.twitter,
+      //   will: userData.will,
+      //   attracting_customers: issueData.attracting_customers,
+      //   awareness: issueData.awareness,
+      //   branding: issueData.branding,
+      //   employee_training: issueData.employee_training,
+      //   expansion: issueData.expansion,
+      //   frequency: issueData.frequency,
+      //   human_resources: issueData.human_resources,
+      //   new_customers: issueData.new_customers,
+      //   outflow: issueData.outflow,
+      //   purchases: issueData.purchases,
+      //   repeat_rate: issueData.repeat_rate,
+      //   sales: issueData.sales,
+      //   unit_price: issueData.unit_price,
+      // });
+
+      console.log("ok");
+
+    },
+    // ！！テスト中！！ここまで
     change1() {
       this.displayType = 1;
     },
@@ -134,7 +188,6 @@ export default {
         if (user) {
           this.uid = user.uid;
           const db = getFirestore();
-          // this.userNum = await this.getUserNum(db, user);  // ユーザの連番取得
           this.matching(db);
           this.getOffersReceived(db);
           this.getOffersSubmitted(db);
@@ -153,7 +206,6 @@ export default {
     async getOffersReceived(db){
       let waitCnt = 0;
       const q = query(collection(db, "offers_test"), where("to", "==", this.uid));
-      // const q = query(collection(db, "offers"), where("to", "==", this.userNum));
       const querySnapshot = await getDocs(q);
       const dataLength = querySnapshot.docs.length;
       if (dataLength == 0) this.waitReceived = false;
@@ -173,12 +225,10 @@ export default {
     async matching(db) {
       let waitCnt = 0;
       const hiddenList = await this.getHiddenList(db);  // オススメに表示しない相手のリスト
-      const recommendNum = await this.getRecommend(db);
-      const dataLength = recommendNum.length;
+      const recommendUid = await this.getRecommend(db);
+      const dataLength = recommendUid.length;
       if (dataLength == 0) this.waitRecommend = false;
-
-      // テスト中ここから ///////////
-      recommendNum.forEach(async (offerUid) => {
+      recommendUid.forEach(async (offerUid) => {
         if (hiddenList.indexOf(offerUid) === -1) {
           const userData = await this.getUserData(db, offerUid);
           this.recommends.push(userData);
@@ -187,37 +237,10 @@ export default {
         waitCnt++;
         if (waitCnt == dataLength) this.waitRecommend = false;
       });
-      // テスト中ここまで ///////////
-
-      // recommendNum.forEach(async (offerNum) => {
-      //   if (hiddenList.indexOf(offerNum) === -1) {
-      //     const userData = await this.getUserData(db, offerNum);
-      //     this.recommends.push(userData);
-      //     this.waitRecommend = false;
-      //   }
-      //   waitCnt++;
-      //   if (waitCnt == dataLength) this.waitRecommend = false;
-      // });
-
-      // try {
-      //   const data = await this.$axios.$get(`/matching/${this.userNum}`);
-      //   console.log("おすすめ："+data.offers);  ///// 削除予定
-      //   data.offers.forEach(async (offerNum) => {
-      //     if (hiddenList.indexOf(String(offerNum)) === -1) {
-      //       const userData = await this.getUserData(db, String(offerNum));
-      //       this.recommends.push(userData);
-      //     }
-      //   });
-      //   this.waitRecommend = false;
-      // } catch (e) {
-      //   console.error(e);
-      // }
-
     },
     // 送信済みオファーの取得
     async getOffersSubmitted(db){
       const q = query(collection(db, "offers_test"), where("from", "==", this.uid));
-      // const q = query(collection(db, "offers"), where("from", "==", this.userNum));
       const querySnapshot = await getDocs(q);
       const dataLength = querySnapshot.docs.length;
       if (dataLength == 0) this.waitSubmitted = false;
@@ -230,26 +253,14 @@ export default {
         this.waitSubmitted = false;
       });
     },
-    // // ユーザの連番を取得（checkLoginで使用）
-    // async getUserNum(db, user) {
-    //   const uid = user.uid;  // ユーザのuid取得
-    //   const docSnap = await getDoc(doc(db, "uid_to_num", uid));
-    //   if (docSnap.exists()) {
-    //     return docSnap.data().num;  // ユーザの連番取得
-    //   } else {
-    //     return "";
-    //   }
-    // },
     // 非表示リストを取得（matchingで受信・送信済みの相手をおすすめから非表示にするため）
     async getHiddenList(db) {
       const hiddenList = [];  // オススメに表示しない相手のリスト
       const querySnapshot = await getDocs(collection(db, "offers_test"));
       querySnapshot.forEach(async (doc) => {
         if (doc.data().from == this.uid) {
-        // if (doc.data().from == this.userNum) {
           hiddenList.push(doc.data().to);
         } else if (doc.data().to == this.uid) {
-        // } else if (doc.data().to == this.userNum) {
           hiddenList.push(doc.data().from);
         }
       });
@@ -260,19 +271,18 @@ export default {
       let loginUser = {};
       let cnt = 0;
       let max_cnt = 0;
+      let max_next_cnt = 0;
+      let recommend_next = [];
       let recommend = [];
-      const docSnap = await getDoc(doc(db, "users_test", this.uid));
-      // const docSnap = await getDoc(doc(db, "ManagementIssues", this.userNum));
-      if (docSnap.exists()) {
-        loginUser = docSnap.data();
-      }
+      const q_login = query(collection(db, "users_test"), where("uid", "==", this.uid));
+      const querySnapshot_login = await getDocs(q_login);
+      loginUser = querySnapshot_login.docs[0].data();
       const q = query(collection(db, "users_test"));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach(async (doc) => {
         cnt = 0;
         const compare = doc.data();
         if (compare.uid != this.uid) {
-        // if (doc.id != this.userNum) {
           if (loginUser.attracting_customers && compare.attracting_customers) cnt++;
           if (loginUser.awareness && compare.awareness) cnt++;
           if (loginUser.branding && compare.branding) cnt++;
@@ -287,48 +297,31 @@ export default {
           if (loginUser.sales && compare.sales) cnt++;
           if (loginUser.unit_price && compare.unit_price) cnt++;
           if (cnt > max_cnt) {
+            max_next_cnt = max_cnt;
+            recommend_next = recommend;
+            max_cnt = cnt;
             recommend = [];
             recommend.push(compare.uid);
-            max_cnt = cnt;
           } else if (cnt == max_cnt) {
             recommend.push(compare.uid);
+          } else if (cnt > max_next_cnt) {
+            max_next_cnt = cnt;
+            recommend_next = [];
+            recommend_next.push(compare.uid);
+          }  else if(cnt = max_next_cnt) {
+            recommend_next.push(compare.uid);
           }
         }
       });
-      return recommend;
+      return recommend.concat(recommend_next);
     },
     // 引数のuidのユーザ情報を取得（matching, getOffersSubmitted, getOffersReceivedで使用）
     async getUserData(db, uid) {
-    // async getUserData(db, userNum) {
-      
-      // テスト中ここから ///////////
       const q = query(collection(db, "users_test"), where("uid", "==", uid));
       const querySnapshot = await getDocs(q);
       const userData = querySnapshot.docs[0].data();
       userData["uid"] = uid;
       return userData;
-      // テスト中ここまで ///////////
-      
-      // let userData = {};
-      // const docSnap = await getDoc(doc(db, "users", userNum));
-      // if (docSnap.exists()) {
-      //   const data = docSnap.data();
-      //   userData = {
-      //     userNum: userNum,
-      //     address: data.address,
-      //     industry: data.industry,
-      //     introduction: data.introduction,
-      //     line_administrator: data.line_administrator,
-      //     line_furigana: data.line_furigana,
-      //     message: data.message,
-      //     representative: data.representative,
-      //     shop_name: data.shop_name,
-      //   };
-      //   return userData;
-      // } else {
-      //   console.log("No such document.");
-      //   return userData;
-      // }
     },
     openReceivedProfile(uid, offerID, is_succeeded){
       this.$router.push({

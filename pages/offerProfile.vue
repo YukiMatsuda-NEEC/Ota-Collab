@@ -226,7 +226,6 @@ export default {
       isInputMode: false,
       show: false,
       uid: "",
-      // userNum: "",
       message: "",
       shop_name: "",
       representative: "",
@@ -283,7 +282,6 @@ export default {
         }
       });
       const db = getFirestore();
-      // テスト中ここから ///////////
       const q = query(collection(db, "users_test"), where("uid", "==", uid));
       const querySnapshot = await getDocs(q);
       const userData = querySnapshot.docs[0].data();
@@ -309,71 +307,6 @@ export default {
       if (userData.repeat_rate) this.issues.push("11");
       if (userData.sales) this.issues.push("12");
       if (userData.unit_price) this.issues.push("13");
-      // テスト中ここまで ///////////
-
-      // const docSnapProfile = await getDoc(
-      //   doc(db, "users", userNum)
-      // );
-      // if (docSnapProfile.exists()) {
-      //   const user = docSnapProfile.data(); // ユーザ情報の取得
-      //   this.message = user.message;
-      //   this.shop_name = user.shop_name;
-      //   this.representative = user.representative;
-      //   this.industry = user.industry;
-      //   this.address = user.address;
-      //   this.line_administrator = user.line_administrator;
-      //   this.line_furigana = user.line_furigana;
-      //   this.introduction = user.introduction;
-      // } else {
-      //   console.log("No such document.");
-      // }
-      // const docSnapIssues = await getDoc(
-      //   doc(db, "ManagementIssues", userNum)
-      // );
-      // if (docSnapIssues.exists()) {
-      //   const issuesData = docSnapIssues.data(); // ユーザの経営課題の取得
-      //   if (issuesData.attracting_customers) {
-      //     this.issues.push("1");
-      //   }
-      //   if (issuesData.awareness) {
-      //     this.issues.push("2");
-      //   }
-      //   if (issuesData.branding) {
-      //     this.issues.push("3");
-      //   }
-      //   if (issuesData.employee_training) {
-      //     this.issues.push("4");
-      //   }
-      //   if (issuesData.expansion) {
-      //     this.issues.push("5");
-      //   }
-      //   if (issuesData.frequency) {
-      //     this.issues.push("6");
-      //   }
-      //   if (issuesData.human_resources) {
-      //     this.issues.push("7");
-      //   }
-      //   if (issuesData.new_customers) {
-      //     this.issues.push("8");
-      //   }
-      //   if (issuesData.outflow) {
-      //     this.issues.push("9");
-      //   }
-      //   if (issuesData.purchases) {
-      //     this.issues.push("10");
-      //   }
-      //   if (issuesData.repeat_rate) {
-      //     this.issues.push("11");
-      //   }
-      //   if (issuesData.sales) {
-      //     this.issues.push("12");
-      //   }
-      //   if (issuesData.unit_price) {
-      //     this.issues.push("13");
-      //   }
-      // } else {
-      //   console.log("No such document.");
-      // }
     },
     // 以前に興味あるを押しているか確認
     checkIsSucceeded(){

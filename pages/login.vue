@@ -106,8 +106,6 @@ export default {
       const auth = getAuth();
       await createUserWithEmailAndPassword(auth, this.email, this.password)
         .then(async (userCredential) => {
-
-          // テスト中ここから ///////////
           const uid = userCredential.user.uid;
           const db = getFirestore();
           await addDoc(collection(db, "users_test"), {
@@ -138,63 +136,8 @@ export default {
             sales: false,
             unit_price: false,
           });
-          this.returnTop()
-          // テスト中ここまで ///////////
-
-          // // Signed in
-          // const user = userCredential.user;
-          // console.log(user.uid);
-          // // 連番の最後を取得
-          // let db = getFirestore();
-          // // const data = await this.$axios.$get('/getLastNum');
-          // // const userNum = data.lastNum;
-          // let lastNum = 0;
-          // const docSnap = await getDoc(doc(db, "last_num", "7jLx5j1Ng3nIPmjGiced"));
-          // if (docSnap.exists()) {
-          //   lastNum = docSnap.data().num;  // ユーザの連番取得
-          //   await updateDoc(doc(db, "last_num", "7jLx5j1Ng3nIPmjGiced"), {
-          //     lastNum: lastNum + 1,
-          //   });
-          // }
-          // const userNum = String(lastNum);
-
-          // // uidと連番の紐づけを作成
-          // await setDoc(doc(db, "uid_to_num", user.uid), {
-          //   num: userNum,
-          // });
-          // // usersのひな形を作成
-          // await setDoc(doc(db, "users", userNum), {
-          //   address: "",
-          //   facebook: "",
-          //   industry: "",
-          //   instagram: "",
-          //   introduction: "",
-          //   line_administrator: "",
-          //   line_furigana: "",
-          //   message: "",
-          //   representative: "",
-          //   shop_name: "",
-          //   twitter: "",
-          //   will: true,
-          // });
-          // // ManagementIssuesのひな形を作成
-          // await setDoc(doc(db, "ManagementIssues", userNum), {
-          //   attracting_customers: false,
-          //   awareness: false,
-          //   branding: false,
-          //   employee_training: false,
-          //   expansion: false,
-          //   frequency: false,
-          //   human_resources: false,
-          //   new_customers: false,
-          //   outflow: false,
-          //   purchases: false,
-          //   repeat_rate: false,
-          //   sales: false,
-          //   unit_price: false,
-          // });
-          // this.returnTop()
-          // // ...
+          this.returnTop();
+          // ...
         })
         .catch((error) => {
           // エラーで処理が終わったら有効にする
