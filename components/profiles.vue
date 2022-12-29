@@ -364,8 +364,7 @@
 <script>
 import Title from "~/components/Title.vue";
 import otaInput from "~/components/otaInput.vue";
-// import { getFips } from "crypto";
-import { getFirestore, getDoc, updateDoc, doc, getDocs, query, collection, where } from "firebase/firestore";
+import { getFirestore, updateDoc, doc, getDocs, query, collection, where } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
   getStorage,
@@ -601,9 +600,6 @@ export default {
   },
   data() {
     return {
-      shopName: "のりや",
-      userName: "田中",
-      isInputMode: false,
       show: false,
       uid: "",
       user_doc_id: "",

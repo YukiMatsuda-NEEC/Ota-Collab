@@ -57,13 +57,6 @@
   display: flex;
   background: #acacac;
   border-radius: 0px 0px 13px 13px;
-  // button {
-  //   background-color: rgb(230, 230, 230);
-  //   border: 1px solid rgb(44, 44, 44);
-  //   a {
-  //     text-decoration: none;
-  //   }
-  // }
 }
 section button {
   display: inline-block;
@@ -88,7 +81,7 @@ header {
 import OfferCard from "~/components/OfferCard.vue";
 import recommendCard from "~/components/recommendCard.vue";
 import replyWait from "~/components/replyWait.vue";
-import { getFirestore, doc, getDoc, getDocs, query, collection, where, addDoc } from "firebase/firestore";
+import { getFirestore, getDocs, query, collection, where } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default {
@@ -100,8 +93,6 @@ export default {
   },
   data() {
     return {
-      day: 26,
-      userName: "田中",
       waitReceived: true,
       waitRecommend: true,
       waitSubmitted: true,

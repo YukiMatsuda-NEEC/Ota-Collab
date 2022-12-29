@@ -211,7 +211,7 @@
 
 <script>
 import Title from "~/components/Title.vue";
-import { getFirestore, doc, getDoc, addDoc, serverTimestamp, updateDoc, getDocs, query, collection, where } from "firebase/firestore";
+import { getFirestore, doc, addDoc, serverTimestamp, updateDoc, getDocs, query, collection, where } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
 
@@ -222,8 +222,6 @@ export default {
   },
   data() {
     return {
-      userName: "田中",
-      isInputMode: false,
       show: false,
       uid: "",
       message: "",
