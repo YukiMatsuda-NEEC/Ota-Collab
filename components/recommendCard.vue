@@ -103,14 +103,14 @@ export default {
   methods: {
     // アイコン画像の取得
     getIconUrl() {
-      const userNum = this.recommend["userNum"];
+      const uid = this.recommend["uid"];
       const storage = getStorage();
-      const listRef = ref(storage, "/" + userNum);
+      const listRef = ref(storage, "/" + uid);
       listAll(listRef).then((res) => {
         for (var i = 0; res.items.length > i; i++) {
           const imgName = res.items[i].name.split(".")[0];
           if (imgName == "Icon") {
-            getDownloadURL(ref(storage, userNum + "/" + res.items[i].name))
+            getDownloadURL(ref(storage, uid + "/" + res.items[i].name))
               .then((url) => {
                 this.iconUrl = url;
               })

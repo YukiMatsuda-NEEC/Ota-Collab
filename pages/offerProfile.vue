@@ -211,15 +211,7 @@
 
 <script>
 import Title from "~/components/Title.vue";
-import {
-  getFirestore,
-  doc,
-  collection,
-  getDoc,
-  addDoc,
-  serverTimestamp,
-  updateDoc,
-} from "firebase/firestore";
+import { getFirestore, doc, addDoc, serverTimestamp, updateDoc, getDocs, query, collection, where } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
 
@@ -230,10 +222,8 @@ export default {
   },
   data() {
     return {
-      userName: "田中",
-      isInputMode: false,
       show: false,
-      userNum: "",
+      uid: "",
       message: "",
       shop_name: "",
       representative: "",
@@ -255,13 +245,13 @@ export default {
   methods: {
     // オファーから移動してきたときのデータの取得
     async getData() {
-      const userNum = this.$route.params.userNum;
+      const uid = this.$route.params.uid;
       const storage = getStorage();
-      const listRef = ref(storage, "/" + userNum); //ユーザーイメージの取得
+      const listRef = ref(storage, "/" + uid); //ユーザーイメージの取得
       listAll(listRef).then((res) => {
         for (var i = 0; res.items.length > i; i++) {
           const imgName = res.items[i].name.split(".")[0];
-          const filePass = userNum + "/" + res.items[i].name;
+          const filePass = uid + "/" + res.items[i].name;
           if (imgName == "Header") {
             getDownloadURL(ref(storage, filePass))
               .then((url) => {
@@ -290,69 +280,31 @@ export default {
         }
       });
       const db = getFirestore();
-      const docSnapProfile = await getDoc(
-        doc(db, "users", userNum)
-      );
-      if (docSnapProfile.exists()) {
-        const user = docSnapProfile.data(); // ユーザ情報の取得
-        this.message = user.message;
-        this.shop_name = user.shop_name;
-        this.representative = user.representative;
-        this.industry = user.industry;
-        this.address = user.address;
-        this.line_administrator = user.line_administrator;
-        this.line_furigana = user.line_furigana;
-        this.introduction = user.introduction;
-      } else {
-        console.log("No such document.");
-      }
-      const docSnapIssues = await getDoc(
-        doc(db, "ManagementIssues", userNum)
-      );
-      if (docSnapIssues.exists()) {
-        const issuesData = docSnapIssues.data(); // ユーザの経営課題の取得
-        if (issuesData.attracting_customers) {
-          this.issues.push("1");
-        }
-        if (issuesData.awareness) {
-          this.issues.push("2");
-        }
-        if (issuesData.branding) {
-          this.issues.push("3");
-        }
-        if (issuesData.employee_training) {
-          this.issues.push("4");
-        }
-        if (issuesData.expansion) {
-          this.issues.push("5");
-        }
-        if (issuesData.frequency) {
-          this.issues.push("6");
-        }
-        if (issuesData.human_resources) {
-          this.issues.push("7");
-        }
-        if (issuesData.new_customers) {
-          this.issues.push("8");
-        }
-        if (issuesData.outflow) {
-          this.issues.push("9");
-        }
-        if (issuesData.purchases) {
-          this.issues.push("10");
-        }
-        if (issuesData.repeat_rate) {
-          this.issues.push("11");
-        }
-        if (issuesData.sales) {
-          this.issues.push("12");
-        }
-        if (issuesData.unit_price) {
-          this.issues.push("13");
-        }
-      } else {
-        console.log("No such document.");
-      }
+      const q = query(collection(db, "users"), where("uid", "==", uid));
+      const querySnapshot = await getDocs(q);
+      const userData = querySnapshot.docs[0].data();
+      this.message = userData.message;
+      this.shop_name = userData.shop_name;
+      this.shop_nameChild = userData.shop_name;
+      this.representative = userData.representative;
+      this.industry = userData.industry;
+      this.address = userData.address;
+      this.line_administrator = userData.line_administrator;
+      this.line_furigana = userData.line_furigana;
+      this.introduction = userData.introduction;
+      if (userData.attracting_customers) this.issues.push("1");
+      if (userData.awareness) this.issues.push("2");
+      if (userData.branding) this.issues.push("3");
+      if (userData.employee_training) this.issues.push("4");
+      if (userData.expansion) this.issues.push("5");
+      if (userData.frequency) this.issues.push("6");
+      if (userData.human_resources) this.issues.push("7");
+      if (userData.new_customers) this.issues.push("8");
+      if (userData.outflow) this.issues.push("9");
+      if (userData.purchases) this.issues.push("10");
+      if (userData.repeat_rate) this.issues.push("11");
+      if (userData.sales) this.issues.push("12");
+      if (userData.unit_price) this.issues.push("13");
     },
     // 以前に興味あるを押しているか確認
     checkIsSucceeded(){
@@ -362,14 +314,14 @@ export default {
     async interestOffer() {
       this.show = true;
       const db = getFirestore();
-      await updateDoc(doc(db, "offers", this.$route.params.offerID), {
+      await updateDoc(doc(db, "offers_test", this.$route.params.offerID), {
         is_succeeded: true,
       });
     },
     // パスボタンの機能
     async passOffer() {
       const db = getFirestore();
-      await updateDoc(doc(db, "offers", this.$route.params.offerID), {
+      await updateDoc(doc(db, "offers_test", this.$route.params.offerID), {
         is_rejected: true,
       });
       this.returnBeforePage();
@@ -379,20 +331,14 @@ export default {
       const auth = getAuth();
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          const uid = user.uid; // ユーザのuid取得
+          this.uid = user.uid; // ユーザのuid取得
           const db = getFirestore();
-          const docSnap = await getDoc(doc(db, "uid_to_num", uid));
-          if (docSnap.exists()) {
-            this.userNum = docSnap.data().num; // ユーザの連番取得
-          } else {
-            console.log("No such document.");
-          }
-          await addDoc(collection(db, "offers"), {
+          await addDoc(collection(db, "offers_test"), {
             date: serverTimestamp(),
-            from: this.userNum,
+            from: this.uid,
             is_rejected: false,
             is_succeeded: false,
-            to: this.$route.params.userNum,
+            to: this.$route.params.uid,
           });
           alert("オファーを送信しました。");
           this.returnBeforePage();
